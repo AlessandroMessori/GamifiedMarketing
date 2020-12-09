@@ -1,0 +1,30 @@
+body{
+    text-align: center;
+}
+
+h2 {
+    margin-top: 1.5%;
+    font-size: 35px;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    width: 50%;
+}
+
+form * {
+    margin: 1%;
+}
+
+.userRow {
+    border: 1px solid black;
+}
+
+.userList {
+    margin-left: 35%;
+    margin-bottom: 1%;
+    max-width: 30%;
+}

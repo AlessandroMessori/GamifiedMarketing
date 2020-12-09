@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/leaderboard.css"
+          th:href="@{/stylesheets/leaderboard.css}"/>
+    <title>Gamified Marketing</title>
+</head>
+<body>
+<h1>Gamified Marketing</h1>
+<hr/>
+<div>
+    <h2>Leaderboard</h2>
+
+    <div class="leaderboard">
+        <div class="position" th:each="l : ${leaderboard}">
+            <span class="uname" th:text="${l.getUname()}"></span>
+            <span class="points" th:text="${l.getPoints()}"></span>
+        </div>
+    </div>
+    <a href="/home">Go to home page</a>
+</div>
+
+</body>
+</html>
+

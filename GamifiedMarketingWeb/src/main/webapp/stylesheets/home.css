@@ -1,0 +1,38 @@
+body{
+    text-align: center;
+}
+
+h2 {
+    margin-top: 1.5%;
+    font-size: 35px;
+}
+
+img {
+    max-width: 600px;
+    min-height: 400px;
+    margin: 2% 0;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    width: 50%;
+}
+
+.reviewList {
+    max-height: 500px;
+    overflow-y: scroll;
+    border: 1px solid black;
+}
+
+.review {
+    text-align: initial;
+    border: 1px solid black;
+    padding: 1%;
+}
+
+.review span {
+    float: right;
+}
