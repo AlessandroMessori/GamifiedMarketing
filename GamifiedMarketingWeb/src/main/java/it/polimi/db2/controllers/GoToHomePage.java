@@ -1,6 +1,9 @@
 package it.polimi.db2.controllers;
 
+import entities.PDay;
+import entities.Product;
 import entities.Review;
+import services.PDayService;
 import services.ReviewService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -8,7 +11,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -26,7 +28,9 @@ public class GoToHomePage extends HttpServlet {
     private TemplateEngine templateEngine;
 
     List<Review> reviewList;
+    Product pDay;
     ReviewService reviewService;
+    PDayService pDayService;
 
 
     public void init() throws ServletException {
@@ -37,15 +41,19 @@ public class GoToHomePage extends HttpServlet {
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
         this.reviewService = new ReviewService();
+        this.pDayService = new PDayService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        reviewList = reviewService.getReviewsByProductId(1);
+
         ServletContext servletContext = getServletContext();
+        pDay = pDayService.getTodayProduct().getProduct();
+        reviewList = reviewService.getReviewsByProductId(pDay.getId());
+
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("reviewList", reviewList);
-        ctx.setVariable("productName", "iPhone 12");
-        ctx.setVariable("productImg", "https://images.everyeye.it/img-notizie/iphone-12-pro-max-davvero-ultratop-apple-previste-specifiche-esclusive-v3-471318-1280x720.jpg");
+        ctx.setVariable("productName", pDay.getName());
+        ctx.setVariable("productImg", pDay.getImage());
 
         templateEngine.process("/WEB-INF/views/home", ctx, response.getWriter());
         response.setContentType("text/plain");
