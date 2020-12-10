@@ -20,9 +20,9 @@
 
         <div class="reviewList">
             <div class="review" th:each="r : ${reviewList}">
-                <h3 th:text="${r.getUname()}"></h3>
+                <h3 th:text="${r.getUserEmail()}"></h3>
                 <hr/>
-                <p th:text="${r.getReview()}"></p>
+                <p th:text="${r.getText()}"></p>
             </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "User", schema = "GamifiedMarketing")
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
+@NamedQuery(name = "User.checkCredentials", query = "SELECT u from User u WHERE u.email =?1 AND u.password = ?2")
 
 public class User {
 

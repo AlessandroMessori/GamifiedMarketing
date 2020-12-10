@@ -1,7 +1,6 @@
 package services;
 
-import entities.User;
-import exceptions.WrongCredentialsException;
+import entities.Review;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -10,27 +9,28 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 @Stateless
-public class UserService {
+public class ReviewService {
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
             .createEntityManagerFactory("GamifiedMarketing");
 
     private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 
-    public UserService() {
+    public ReviewService() {
+
     }
 
-    public User getFirstUser() {
+    public List<Review> getReviewsByProductId(int productId) {
 
-
-        List<User> uList = em.createNamedQuery("User.getAll", User.class)
+        List<Review> rList = em.createNamedQuery("Review.getReviewsByProductId", Review.class).setParameter(1, productId)
                 .getResultList();
 
-        return uList.get(0);
+        return rList;
     }
 
-    public User checkCredentials(String email, String pwd) throws WrongCredentialsException {
-        return null;
+    public static void main(String[] args) {
+        System.out.println(new ReviewService().getReviewsByProductId(1));
     }
+
 
 }
