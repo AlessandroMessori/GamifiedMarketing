@@ -1,12 +1,14 @@
 package services;
 
 import entities.PDay;
+import exceptions.NoPDayException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TemporalType;
 import java.util.Date;
+import java.util.List;
 
 public class PDayService {
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
@@ -17,11 +19,16 @@ public class PDayService {
     public PDayService() {
     }
 
-    public PDay getTodayProduct() {
-        return (PDay) em.createNamedQuery("PDay.getTodayProduct")
+    public PDay getTodayProduct() throws NoPDayException {
+        List result = em.createNamedQuery("PDay.getTodayProduct")
                 .setParameter(1, (new Date()), TemporalType.DATE)
-                .getResultList()
-                .get(0);
+                .getResultList();
+
+        if (result.size() == 0) {
+            throw new NoPDayException("There is not a product of the day yet!");
+        }
+
+        return (PDay) result.get(0);
     }
 
 }
