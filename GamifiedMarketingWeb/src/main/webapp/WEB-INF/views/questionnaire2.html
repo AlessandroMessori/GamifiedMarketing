@@ -9,17 +9,18 @@
 <h1>Gamified Marketing</h1>
 <hr/>
 <div class="row">
-    <h2>Questionnaire - Statistical Section</h2>
+    <h2>Questionnaire - Marketing Section</h2>
 </div>
 
 <div>
-    <div  th:each="s : ${statisticalQuestions}">
+    <div  th:each="s : ${marketingQuestions}">
         <h3 th:text="${s.getText()}"></h3>
         <textarea></textarea>
     </div>
 </div>
+<a href="/questionnaire">Go Back</a>
 <a href="/home">Go To Home Page</a>
-<a href="/questionnaire2">Next</a>
+<a href="/greetings">Next</a>
 
 </body>
 </html>

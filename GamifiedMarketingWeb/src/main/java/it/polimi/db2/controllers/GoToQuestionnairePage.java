@@ -1,11 +1,7 @@
 package it.polimi.db2.controllers;
 
-import entities.PDay;
-import entities.Product;
-import entities.Review;
-import exceptions.NoPDayException;
-import services.PDayService;
-import services.ReviewService;
+import entities.Question;
+import services.QuestionService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -24,15 +20,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/home")
-public class GoToHomePage extends HttpServlet {
+@WebServlet("/questionnaire")
+public class GoToQuestionnairePage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
-    List<Review> reviewList;
-    PDay pDay;
-    ReviewService reviewService;
-    PDayService pDayService;
+    List<Question> statisticalQuestions;
+    QuestionService questionService;
 
 
     public void init() throws ServletException {
@@ -42,34 +36,19 @@ public class GoToHomePage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
-        this.reviewService = new ReviewService();
-        this.pDayService = new PDayService();
+        this.questionService = new QuestionService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        String productName = "There is no product of the day yet!";
-        String productImg = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
-        reviewList = new ArrayList<>();
+        statisticalQuestions = new ArrayList<>();
 
-        try {
-            pDay = pDayService.getTodayProduct();
-            Product product = pDay.getProduct();
-            reviewList = reviewService.getReviewsByProductId(product.getId());
-            productName = product.getName();
-            productImg = product.getImage();
-        } catch (NoPDayException e) {
-            e.printStackTrace();
-        } finally {
-            ctx.setVariable("reviewList", reviewList);
-            ctx.setVariable("productName", productName);
-            ctx.setVariable("productImg", productImg);
+        statisticalQuestions = questionService.getStatisticalQuestions();
 
-            templateEngine.process("/WEB-INF/views/home", ctx, response.getWriter());
-            response.setContentType("text/plain");
-        }
+        ctx.setVariable("statisticalQuestions", statisticalQuestions);
+
+        templateEngine.process("/WEB-INF/views/questionnaire", ctx, response.getWriter());
+        response.setContentType("text/plain");
     }
-
 }
