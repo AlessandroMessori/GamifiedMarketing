@@ -1,4 +1,4 @@
-package entities;
+package it.polimi.db2.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

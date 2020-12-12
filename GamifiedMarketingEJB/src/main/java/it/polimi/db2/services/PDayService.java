@@ -1,7 +1,7 @@
-package services;
+package it.polimi.db2.services;
 
-import entities.PDay;
-import exceptions.NoPDayException;
+import it.polimi.db2.entities.PDay;
+import it.polimi.db2.exceptions.NoPDayException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

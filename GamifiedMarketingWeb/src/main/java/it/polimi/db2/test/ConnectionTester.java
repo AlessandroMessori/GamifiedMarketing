@@ -1,6 +1,6 @@
 package it.polimi.db2.test;
 
-import services.UserService;
+import it.polimi.db2.services.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

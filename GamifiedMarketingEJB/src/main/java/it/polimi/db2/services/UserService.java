@@ -1,7 +1,7 @@
-package services;
+package it.polimi.db2.services;
 
-import entities.User;
-import exceptions.WrongCredentialsException;
+import it.polimi.db2.entities.User;
+import it.polimi.db2.exceptions.WrongCredentialsException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

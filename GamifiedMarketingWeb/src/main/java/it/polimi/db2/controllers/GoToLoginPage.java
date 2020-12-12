@@ -1,7 +1,5 @@
 package it.polimi.db2.controllers;
 
-import services.UserService;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;

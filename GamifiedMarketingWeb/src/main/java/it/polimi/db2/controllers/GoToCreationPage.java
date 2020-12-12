@@ -1,6 +1,6 @@
 package it.polimi.db2.controllers;
 
-import fakeEntities.Product;
+import it.polimi.db2.fakeEntities.Product;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;

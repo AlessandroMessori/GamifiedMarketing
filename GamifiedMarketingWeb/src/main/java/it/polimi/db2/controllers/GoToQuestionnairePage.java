@@ -1,7 +1,7 @@
 package it.polimi.db2.controllers;
 
-import entities.Question;
-import services.QuestionService;
+import it.polimi.db2.entities.Question;
+import it.polimi.db2.services.QuestionService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;

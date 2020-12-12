@@ -1,4 +1,4 @@
-package entities;
+package it.polimi.db2.entities;
 
 import java.io.Serializable;
 

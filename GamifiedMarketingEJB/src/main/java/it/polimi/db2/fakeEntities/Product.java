@@ -1,4 +1,4 @@
-package fakeEntities;
+package it.polimi.db2.fakeEntities;
 
 import java.net.MalformedURLException;
 import java.net.URL;

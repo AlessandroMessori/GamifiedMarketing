@@ -1,6 +1,6 @@
-package services;
+package it.polimi.db2.services;
 
-import entities.Question;
+import it.polimi.db2.entities.Question;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

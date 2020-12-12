@@ -1,4 +1,4 @@
-package fakeEntities;
+package it.polimi.db2.fakeEntities;
 
 
 public class Review {

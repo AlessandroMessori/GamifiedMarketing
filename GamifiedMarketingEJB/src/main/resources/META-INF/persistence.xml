@@ -8,11 +8,11 @@
         <!-- Persistence provider -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- Entity classes -->
-        <class>entities.User</class>
-        <class>entities.Review</class>
-        <class>entities.Product</class>
-        <class>entities.PDay</class>
-        <class>entities.Question</class>
+        <class>it.polimi.db2.entities.User</class>
+        <class>it.polimi.db2.entities.Review</class>
+        <class>it.polimi.db2.entities.Product</class>
+        <class>it.polimi.db2.entities.PDay</class>
+        <class>it.polimi.db2.entities.Question</class>
         <properties>
             <!-- The JDBC driver of your database -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

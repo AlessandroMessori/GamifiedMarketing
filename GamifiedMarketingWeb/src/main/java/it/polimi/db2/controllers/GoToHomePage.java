@@ -1,11 +1,11 @@
 package it.polimi.db2.controllers;
 
-import entities.PDay;
-import entities.Product;
-import entities.Review;
-import exceptions.NoPDayException;
-import services.PDayService;
-import services.ReviewService;
+import it.polimi.db2.entities.PDay;
+import it.polimi.db2.entities.Product;
+import it.polimi.db2.entities.Review;
+import it.polimi.db2.exceptions.NoPDayException;
+import it.polimi.db2.services.PDayService;
+import it.polimi.db2.services.ReviewService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -31,7 +32,9 @@ public class GoToHomePage extends HttpServlet {
 
     List<Review> reviewList;
     PDay pDay;
+    @EJB(beanName= "it.polimi.db2.services/ReviewService.java")
     ReviewService reviewService;
+    @EJB(beanName="it.polimi.db2.services/PDayService.java")
     PDayService pDayService;
 
 
@@ -42,8 +45,6 @@ public class GoToHomePage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
-        this.reviewService = new ReviewService();
-        this.pDayService = new PDayService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
