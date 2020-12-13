@@ -10,7 +10,8 @@
 <h1>${message}</h1>
 <hr/>
 <h2>Sign Up</h2>
-<form>
+
+<form action="signup" method="POST">
     <input type="email" id="email" name="email" value="" placeholder="Email">
     <input type="text" id="username" name="username" placeholder="Username">
     <input type="password" id="password" name="password" placeholder="Password">
