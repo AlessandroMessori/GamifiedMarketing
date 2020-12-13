@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,18 +26,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/home")
+@WebServlet("/pday")
 public class GoToHomePage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
     List<Review> reviewList;
     PDay pDay;
-    @EJB(beanName= "it.polimi.db2.services/ReviewService.java")
+    @EJB(name = "ReviewService")
     ReviewService reviewService;
-    @EJB(beanName="it.polimi.db2.services/PDayService.java")
+    @EJB(name = "PDayService")
     PDayService pDayService;
-
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -45,6 +45,7 @@ public class GoToHomePage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
