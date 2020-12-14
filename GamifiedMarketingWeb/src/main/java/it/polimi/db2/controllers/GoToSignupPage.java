@@ -1,6 +1,5 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.entities.User;
 import it.polimi.db2.services.UserService;
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
@@ -9,8 +8,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -40,7 +37,6 @@ public class GoToSignupPage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,43 +48,40 @@ public class GoToSignupPage extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // obtain and escape params
-        String email;
-        String uname;
-        String pwd;
-        try {
-            email = StringEscapeUtils.escapeJava(request.getParameter("email"));
-            uname = StringEscapeUtils.escapeJava(request.getParameter("username"));
-            pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
-            if (email == null || uname == null || pwd == null || email.isEmpty() || uname.isEmpty() || pwd.isEmpty()) {
-                throw new Exception("Missing or empty credential value");
-            }
+        String path;
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
+        // obtain and escape params
+        String email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+        String uname = StringEscapeUtils.escapeJava(request.getParameter("username"));
+        String pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
+
+        try {
+            checkForEmptyCredentials(email, uname, pwd);
         } catch (Exception e) {
             // for debugging only e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
             return;
         }
 
-        User user = null;
         try {
-            user = userService.registerUser(email, uname, pwd);
+            userService.registerUser(email, uname, pwd);
+            path = "/WEB-INF/views/login";
+            ctx.setVariable("successMsg", "User Registered Successfully");
         } catch (Exception e) {
             e.printStackTrace();
+            ctx.setVariable("errorMsg", e.getMessage());
+            path = "/WEB-INF/views/signup";
         }
 
+        templateEngine.process(path, ctx, response.getWriter());
+    }
 
-        String path;
-        if (user == null) {
-            ServletContext servletContext = getServletContext();
-            final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-            ctx.setVariable("errorMsg", "Incorrect username or password");
-            path = "/index.html";
-            templateEngine.process(path, ctx, response.getWriter());
-        } else {
-            request.getSession().setAttribute("user", user);
-            path = getServletContext().getContextPath() + "/login";
-            response.sendRedirect(path);
+    private void checkForEmptyCredentials(String email, String uname, String pwd) throws Exception {
+
+        if (email == null || uname == null || pwd == null || email.isEmpty() || uname.isEmpty() || pwd.isEmpty()) {
+            throw new Exception("Missing or empty credential value");
         }
 
     }

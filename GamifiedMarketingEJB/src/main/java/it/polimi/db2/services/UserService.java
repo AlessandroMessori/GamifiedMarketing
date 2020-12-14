@@ -1,6 +1,7 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entities.User;
+import it.polimi.db2.exceptions.UserAlreadyExistsException;
 import it.polimi.db2.exceptions.WrongCredentialsException;
 
 import javax.ejb.Stateless;
@@ -36,24 +37,35 @@ public class UserService {
         return null;
     }
 
-    public User registerUser(String email, String uname, String pwd) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        User user = new User();
-        user.setEmail(email);
-        user.setUsername(uname);
-        user.setPassword(pwd);
+    public User registerUser(String email, String uname, String pwd) throws Exception {
+        boolean alreadyExists;
+        User user;
 
-        try {
-            EntityTransaction transaction = em.getTransaction();
-            transaction.begin();
+
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        // checks if an user with the same credentials already exists
+        alreadyExists = em.createNamedQuery("User.checkUnique", User.class)
+                .setParameter(1, email)
+                .setParameter(2, uname)
+                .getResultList()
+                .size() > 0;
+
+        if (alreadyExists) {
+            transaction.commit();
+            throw new UserAlreadyExistsException("Credentials already taken by another user");
+        } else {
+            user = new User();
+
+            user.setEmail(email);
+            user.setUsername(uname);
+            user.setPassword(pwd);
             em.persist(user);
             transaction.commit();
-            return user;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        return null;
-
+        return user;
     }
 
 }
