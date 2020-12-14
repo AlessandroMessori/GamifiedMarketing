@@ -1,12 +1,18 @@
 package it.polimi.db2.controllers;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import it.polimi.db2.entities.User;
+import it.polimi.db2.services.UserService;
+import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -20,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 public class GoToSignupPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
+    @EJB(name = "UserService")
+    UserService userService;
 
     public GoToSignupPage() {
         super();
@@ -32,23 +40,27 @@ public class GoToSignupPage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        templateEngine.process("/WEB-INF/views/signup", ctx, response.getWriter());
         response.setContentType("text/plain");
-        request.setAttribute("message", "Gamified Marketing");
-        request.getRequestDispatcher("/WEB-INF/views/signup.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // obtain and escape params
-        String usrn = null;
-        String pwd = null;
+        String email;
+        String uname;
+        String pwd;
         try {
-            usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
+            email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+            uname = StringEscapeUtils.escapeJava(request.getParameter("username"));
             pwd = StringEscapeUtils.escapeJava(request.getParameter("password"));
-            if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
+            if (email == null || uname == null || pwd == null || email.isEmpty() || uname.isEmpty() || pwd.isEmpty()) {
                 throw new Exception("Missing or empty credential value");
             }
 
@@ -58,20 +70,13 @@ public class GoToSignupPage extends HttpServlet {
             return;
         }
 
-        System.out.println(usrn + " " + pwd);
-
-        /*User user;
+        User user = null;
         try {
-            // query db to authenticate for user
-            user = usrService.checkCredentials(usrn, pwd);
-        } catch (CredentialsException | NonUniqueResultException e) {
+            user = userService.registerUser(email, uname, pwd);
+        } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
-            return;
         }
 
-        // If the user exists, add info to the session and go to home page, otherwise
-        // show login page with error message
 
         String path;
         if (user == null) {
@@ -82,9 +87,9 @@ public class GoToSignupPage extends HttpServlet {
             templateEngine.process(path, ctx, response.getWriter());
         } else {
             request.getSession().setAttribute("user", user);
-            path = getServletContext().getContextPath() + "/Home";
+            path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
-        }*/
+        }
 
     }
 

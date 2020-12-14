@@ -6,7 +6,10 @@ import it.polimi.db2.exceptions.WrongCredentialsException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @Stateless
@@ -31,6 +34,26 @@ public class UserService {
 
     public User checkCredentials(String email, String pwd) throws WrongCredentialsException {
         return null;
+    }
+
+    public User registerUser(String email, String uname, String pwd) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(uname);
+        user.setPassword(pwd);
+
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+            em.persist(user);
+            transaction.commit();
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 
 }

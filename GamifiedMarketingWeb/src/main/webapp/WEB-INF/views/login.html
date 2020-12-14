@@ -1,9 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/stylesheets/signup.css"/>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/signup.css"
+          th:href="@{/stylesheets/signup.css}"/>
     <title>Gamified Marketing</title>
 </head>
 <body>
@@ -15,7 +14,7 @@
     <input type="password" id="password" name="password" placeholder="Password">
     <input type="submit" id="submitButton" value="Submit">
 </form>
-<a href="${pageContext.request.contextPath}/signup"> Go to signup page</a>
+<a href="/signup"> Go to signup page</a>
 </body>
 </html>
 
