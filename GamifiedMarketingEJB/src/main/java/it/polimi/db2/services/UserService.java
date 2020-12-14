@@ -34,7 +34,16 @@ public class UserService {
     }
 
     public User checkCredentials(String email, String pwd) throws WrongCredentialsException {
-        return null;
+        List resultList = em.createNamedQuery("User.checkCredentials")
+                .setParameter(1, email)
+                .setParameter(2, pwd)
+                .getResultList();
+
+        if (resultList.size() == 0) {
+            throw new WrongCredentialsException("Wrong Credentials");
+        } else {
+            return (User) resultList.get(0);
+        }
     }
 
     public User registerUser(String email, String uname, String pwd) throws Exception {
