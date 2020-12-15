@@ -5,7 +5,9 @@
     <title>Gamified Marketing</title>
 </head>
 <body>
+<p id="userNameLabel" th:text="${user.getUsername()}"></p>
 <h1>Gamified Marketing</h1>
+<a id="logoutBtn" th:href="@{/Logout}">Logout</a>
 <hr/>
 <div class="row">
     <div class="column">

@@ -3,6 +3,7 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.PDay;
 import it.polimi.db2.entities.Product;
 import it.polimi.db2.entities.Review;
+import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ReviewService;
@@ -45,7 +46,6 @@ public class GoToHomePage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -68,6 +68,7 @@ public class GoToHomePage extends HttpServlet {
             ctx.setVariable("reviewList", reviewList);
             ctx.setVariable("productName", productName);
             ctx.setVariable("productImg", productImg);
+            ctx.setVariable("user", (User) request.getSession().getAttribute("user"));
 
             templateEngine.process("/WEB-INF/views/home", ctx, response.getWriter());
             response.setContentType("text/plain");

@@ -68,15 +68,14 @@ public class GoToLoginPage extends HttpServlet {
         try {
             User user = userService.checkCredentials(email, pwd);
             request.getSession().setAttribute("user", user);
-            path = "/WEB-INF/views/home";
+            response.sendRedirect("/pday");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             ctx.setVariable("errorMsg", e.getMessage());
-            path = "/WEB-INF/views/login";
+            templateEngine.process("/WEB-INF/views/login", ctx, response.getWriter());
         }
 
-        templateEngine.process(path, ctx, response.getWriter());
     }
 
     private void checkForEmptyCredentials(String email, String pwd) throws Exception {
