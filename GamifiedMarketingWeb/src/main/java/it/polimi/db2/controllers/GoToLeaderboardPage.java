@@ -3,6 +3,7 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.Points;
 import it.polimi.db2.exceptions.NoPointsException;
 import it.polimi.db2.services.LeaderboardService;
+import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -41,6 +42,8 @@ public class GoToLeaderboardPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthUtils.checkAuthentication(request, response)) return;
 
         leaderboard = null;
         try {

@@ -7,6 +7,7 @@ import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ReviewService;
+import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -25,6 +26,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet("/pday")
@@ -55,6 +57,8 @@ public class GoToHomePage extends HttpServlet {
         String productName = "There is no product of the day yet!";
         String productImg = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
         reviewList = new ArrayList<>();
+
+        if (!AuthUtils.checkAuthentication(request, response)) return;
 
         try {
             pDay = pDayService.getTodayProduct();

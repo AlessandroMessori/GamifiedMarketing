@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Question;
 import it.polimi.db2.services.QuestionService;
+import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -40,9 +41,12 @@ public class GoToQuestionnairePage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         statisticalQuestions = new ArrayList<>();
+
+        if (!AuthUtils.checkAuthentication(request, response)) return;
 
         statisticalQuestions = questionService.getStatisticalQuestions();
 
