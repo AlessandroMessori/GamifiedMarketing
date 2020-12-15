@@ -1,6 +1,8 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.fakeEntities.Position;
+import it.polimi.db2.entities.Points;
+import it.polimi.db2.exceptions.NoPointsException;
+import it.polimi.db2.services.LeaderboardService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -24,8 +27,9 @@ public class GoToLeaderboardPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
-    List<Position> positionsList;
-
+    @EJB(name = "LeaderboardService")
+    LeaderboardService leaderboardService;
+    List<Points> leaderboard;
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -38,17 +42,15 @@ public class GoToLeaderboardPage extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Random rd = new Random();
-        List<Position> leaderboard;
-
-        positionsList = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            positionsList.add(new Position("User " + i, rd.nextInt(1000)));
+        leaderboard = null;
+        try {
+            leaderboard = leaderboardService.getTodayLeaderboard();
+        } catch (NoPointsException e) {
+            e.printStackTrace();
         }
 
-        leaderboard = positionsList.stream()
-                .sorted((p1, p2) -> p2.getPoints() - p1.getPoints())
+        leaderboard = leaderboard.stream()
+                .sorted((p1, p2) -> p2.getVal() - p1.getVal())
                 .collect(Collectors.toList());
 
         ServletContext servletContext = getServletContext();

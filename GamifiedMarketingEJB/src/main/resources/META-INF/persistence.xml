@@ -13,6 +13,7 @@
         <class>it.polimi.db2.entities.Product</class>
         <class>it.polimi.db2.entities.PDay</class>
         <class>it.polimi.db2.entities.Question</class>
+        <class>it.polimi.db2.entities.Points</class>
         <properties>
             <!-- The JDBC driver of your database -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

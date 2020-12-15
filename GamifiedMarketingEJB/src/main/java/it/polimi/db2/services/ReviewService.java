@@ -22,10 +22,8 @@ public class ReviewService {
 
     public List<Review> getReviewsByProductId(int productId) {
 
-        List<Review> rList = em.createNamedQuery("Review.getReviewsByProductId", Review.class).setParameter(1, productId)
+        return em.createNamedQuery("Review.getReviewsByProductId", Review.class).setParameter(1, productId)
                 .getResultList();
-
-        return rList;
     }
 
     public static void main(String[] args) {

@@ -13,8 +13,8 @@
 
     <div class="leaderboard">
         <div class="position" th:each="l : ${leaderboard}">
-            <span class="uname" th:text="${l.getUname()}"></span>
-            <span class="points" th:text="${l.getPoints()}"></span>
+            <span class="uname" th:text="${l.getUser().getUsername()}"></span>
+            <span class="points" th:text="${l.getVal()}"></span>
         </div>
     </div>
     <a href="/home">Go to home page</a>
