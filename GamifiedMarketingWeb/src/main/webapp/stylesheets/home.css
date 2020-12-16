@@ -43,8 +43,9 @@ img {
     left: 3%;
 }
 
-#logoutBtn {
+#linksBox {
     position: absolute;
     top: 2%;
     right: 3%;
+    display: inline-grid;
 }

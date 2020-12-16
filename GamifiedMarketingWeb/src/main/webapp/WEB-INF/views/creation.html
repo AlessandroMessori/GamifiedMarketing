@@ -11,14 +11,15 @@
 <div class="row">
     <div class="column">
         <h2>Set Product of The Day</h2>
-        <form>
+        <form action="/admin/creation" method="POST">
             <select id="product" name="product">
                 <option class="review" th:each="p : ${productList}" th:text="${p.getName()}"
                         th:value="${p.getName()}"></option>
-                <input type="date" id="date" name="product" placeholder="Select Date">
+                <input type="date" id="day" name="day" placeholder="Select Date">
                 <input type="submit" id="submitButton" value="Submit">
             </select>
         </form>
+        <p th:text="${message}"></p>
         <a href="/admin/deletion">Go to deletion page</a>
         <a href="/admin/inspection">Go to inspection page</a>
 

@@ -7,7 +7,10 @@
 <body>
 <p id="userNameLabel" th:text="${user.getUsername()}"></p>
 <h1>Gamified Marketing</h1>
-<a id="logoutBtn" th:href="@{/Logout}">Logout</a>
+<div id="linksBox">
+    <a th:href="@{/Logout}">Logout</a>
+    <a th:href="@{/admin/creation}">Admin Section</a>
+</div>
 <hr/>
 <div class="row">
     <div class="column">

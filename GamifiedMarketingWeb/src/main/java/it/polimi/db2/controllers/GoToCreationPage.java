@@ -1,8 +1,10 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Product;
+import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ProductService;
 import it.polimi.db2.utils.AuthUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -27,6 +29,8 @@ public class GoToCreationPage extends HttpServlet {
     private TemplateEngine templateEngine;
     @EJB(name = "ProductService")
     ProductService productService;
+    @EJB(name = "PDayService")
+    PDayService pDayService;
     List<Product> products;
 
 
@@ -50,6 +54,48 @@ public class GoToCreationPage extends HttpServlet {
         ctx.setVariable("productList", products);
         templateEngine.process("/WEB-INF/views/creation", ctx, response.getWriter());
         response.setContentType("text/plain");
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+
+        // obtain and escape params
+        String product = StringEscapeUtils.escapeJava(request.getParameter("product"));
+        String day = StringEscapeUtils.escapeJava(request.getParameter("day"));
+
+        if (!AuthUtils.checkAdminPrivilegies(request, response)) return;
+
+        try {
+            checkForEmptyCredentials(product, day);
+        } catch (Exception e) {
+            // for debugging only e.printStackTrace();
+            ctx.setVariable("message", "Empty Field");
+            ctx.setVariable("productList", products);
+            templateEngine.process("/WEB-INF/views/creation", ctx, response.getWriter());
+            return;
+        }
+
+        try {
+            pDayService.createPday(product, day);
+            ctx.setVariable("message", "PDay Saved Successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.setVariable("message", "There was an error in saving the Product of The Day");
+        }
+
+        products = productService.getAllProducts();
+        ctx.setVariable("productList", products);
+        templateEngine.process("/WEB-INF/views/creation", ctx, response.getWriter());
+    }
+
+    private void checkForEmptyCredentials(String product, String date) throws Exception {
+
+        if (product == null || date == null || product.isEmpty() || date.isEmpty()) {
+            throw new Exception("Missing or empty value");
+        }
+
     }
 
 }

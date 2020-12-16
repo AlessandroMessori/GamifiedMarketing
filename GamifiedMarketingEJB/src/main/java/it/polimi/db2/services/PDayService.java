@@ -1,15 +1,17 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entities.PDay;
+import it.polimi.db2.entities.Product;
 import it.polimi.db2.exceptions.NoPDayException;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Stateless
 public class PDayService {
@@ -18,11 +20,14 @@ public class PDayService {
 
     private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 
+    @EJB(name = "ProductService")
+    ProductService productService;
+
     public PDayService() {
     }
 
     public PDay getTodayProduct() throws NoPDayException {
-        List result = em.createNamedQuery("PDay.getTodayProduct")
+        List<PDay> result = em.createNamedQuery("PDay.getTodayProduct", PDay.class)
                 .setParameter(1, (new Date()), TemporalType.DATE)
                 .getResultList();
 
@@ -30,7 +35,30 @@ public class PDayService {
             throw new NoPDayException("There is not a product of the day yet!");
         }
 
-        return (PDay) result.get(0);
+        return result.get(0);
     }
+
+
+    public PDay createPday(String productName, String day) throws Exception {
+        PDay pDay = new PDay();
+        Product product;
+        EntityTransaction transaction = em.getTransaction();
+
+        transaction.begin();
+
+        product = productService.findProductByName(productName);
+        System.out.println(day);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = format.parse(day);
+        pDay.setDay(date);
+
+        pDay.setProduct(product);
+        em.persist(pDay);
+
+        transaction.commit();
+        return pDay;
+
+    }
+
 
 }

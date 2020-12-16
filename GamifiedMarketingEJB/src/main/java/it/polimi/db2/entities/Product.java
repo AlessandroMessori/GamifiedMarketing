@@ -6,7 +6,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@NamedQuery(name="Product.getAll",query = "SELECT p from Product p")
+@NamedQuery(name = "Product.getAll", query = "SELECT p from Product p")
+@NamedQuery(name = "Product.findProductByName", query = "SELECT p from Product p WHERE p.name = ?1")
 @Table(name = "Product", schema = "GamifiedMarketing")
 
 public class Product {

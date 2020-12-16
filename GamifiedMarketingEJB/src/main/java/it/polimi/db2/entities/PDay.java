@@ -26,4 +26,12 @@ public class PDay {
     public Date getDate() {
         return day;
     }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
+    }
 }
