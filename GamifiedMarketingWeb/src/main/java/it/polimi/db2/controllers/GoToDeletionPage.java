@@ -1,15 +1,17 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.fakeEntities.Product;
+import it.polimi.db2.entities.PDay;
+import it.polimi.db2.services.PDayService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -24,7 +26,10 @@ public class GoToDeletionPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
-    List<Product> productList;
+    @EJB(name = "PDayService")
+    PDayService pDayService;
+
+    List<PDay> pDayList;
     List<String> dateList;
 
 
@@ -38,20 +43,16 @@ public class GoToDeletionPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        productList = new ArrayList<>();
-        dateList = new ArrayList<>();
-        String img = "https://images.everyeye.it/img-notizie/iphone-12-pro-max-davvero-ultratop-apple-previste-specifiche-esclusive-v3-471318-1280x720.jpg";
-        SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+        pDayList = pDayService.getAllPDays();
 
-        for (int i = 0; i < 10; i++) {
-            productList.add(new Product("Product " + i, img));
-            String stringDate = DateFor.format(new Date());
-            dateList.add(stringDate);
-        }
+        dateList = pDayList
+                .stream()
+                .map((pDay) -> DateUtils.getDayString(pDay.getDate()))
+                .collect(Collectors.toList());
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        ctx.setVariable("productList", productList);
+        ctx.setVariable("pDayList", pDayList);
         ctx.setVariable("dateList", dateList);
         templateEngine.process("/WEB-INF/views/deletion", ctx, response.getWriter());
         response.setContentType("text/plain");

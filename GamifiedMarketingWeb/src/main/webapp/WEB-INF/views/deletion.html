@@ -12,15 +12,15 @@
     <h2>Delete Product of The Day</h2>
     <form>
         <select id="product" name="product">
-            <option class="review" th:each="p,iterStat : ${productList}"
-                    th:text="${p.getName()} + ' ' +${dateList[iterStat.index]}"
-                    th:value="${p.getName()} + ' ' +${dateList[iterStat.index]}"></option>
+            <option class="review" th:each="p,iterStat : ${pDayList}"
+                    th:text="${p.getProduct().getName()} + ' ' +${dateList[iterStat.index]}"
+                    th:value="${p.getProduct().getName()} + ' ' +${dateList[iterStat.index]}"></option>
             <input type="submit" id="submitButton" value="Delete">
+        </select>
     </form>
 
     <a href="/admin/creation">Go to creation page</a>
     <a href="/admin/inspection">Go to inspection page</a>
-
 
 
 </div>

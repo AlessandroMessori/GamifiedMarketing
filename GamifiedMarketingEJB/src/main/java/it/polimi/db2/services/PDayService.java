@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @Stateless
 public class PDayService {
@@ -47,7 +46,7 @@ public class PDayService {
         transaction.begin();
 
         product = productService.findProductByName(productName);
-        System.out.println(day);
+
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = format.parse(day);
         pDay.setDay(date);
@@ -58,6 +57,11 @@ public class PDayService {
         transaction.commit();
         return pDay;
 
+    }
+
+    public List<PDay> getAllPDays() {
+        return em.createNamedQuery("PDay.getAllProducts", PDay.class)
+                .getResultList();
     }
 
 

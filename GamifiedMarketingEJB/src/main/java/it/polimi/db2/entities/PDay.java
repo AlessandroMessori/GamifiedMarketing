@@ -6,6 +6,7 @@ import java.util.Date;
 @Entity
 @Table(name = "PDay", schema = "GamifiedMarketing")
 @NamedQuery(name = "PDay.getTodayProduct", query = "SELECT p FROM PDay p WHERE p.day= ?1")
+@NamedQuery(name = "PDay.getAllProducts", query = "SELECT p FROM PDay p ORDER BY p.day")
 public class PDay {
 
     @Id
