@@ -2,9 +2,11 @@ package it.polimi.db2.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
+@NamedQuery(name="Product.getAll",query = "SELECT p from Product p")
 @Table(name = "Product", schema = "GamifiedMarketing")
 
 public class Product {

@@ -1,6 +1,8 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.fakeEntities.Product;
+import it.polimi.db2.entities.Product;
+import it.polimi.db2.services.ProductService;
+import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -9,6 +11,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import java.io.IOException;
 import java.util.*;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -22,8 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 public class GoToCreationPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
-
-    List<Product> productList;
+    @EJB(name = "ProductService")
+    ProductService productService;
+    List<Product> products;
 
 
     public void init() throws ServletException {
@@ -36,16 +40,14 @@ public class GoToCreationPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        productList = new ArrayList<>();
-        String img = "https://images.everyeye.it/img-notizie/iphone-12-pro-max-davvero-ultratop-apple-previste-specifiche-esclusive-v3-471318-1280x720.jpg";
 
-        for (int i = 0; i < 10; i++) {
-            productList.add(new Product("Product" + i, img));
-        }
+        if (!AuthUtils.checkAdminPrivilegies(request, response)) return;
+
+        products = productService.getAllProducts();
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        ctx.setVariable("productList", productList);
+        ctx.setVariable("productList", products);
         templateEngine.process("/WEB-INF/views/creation", ctx, response.getWriter());
         response.setContentType("text/plain");
     }

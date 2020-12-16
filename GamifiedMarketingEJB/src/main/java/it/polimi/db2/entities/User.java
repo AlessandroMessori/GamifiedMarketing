@@ -15,7 +15,7 @@ import java.security.spec.KeySpec;
 @Table(name = "User", schema = "GamifiedMarketing")
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 @NamedQuery(name = "User.checkCredentials", query = "SELECT u from User u WHERE u.email =?1 AND u.password = ?2")
-@NamedQuery(name="User.checkUnique",query = "SELECT u from User u WHERE u.email = ?1 OR u.username = ?2")
+@NamedQuery(name = "User.checkUnique", query = "SELECT u from User u WHERE u.email = ?1 OR u.username = ?2")
 
 public class User {
 
@@ -25,6 +25,8 @@ public class User {
     private String username;
 
     private String password;
+
+    private boolean isAdmin;
 
     public User() {
 
@@ -40,6 +42,10 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
     }
 
     public void setEmail(String email) {
