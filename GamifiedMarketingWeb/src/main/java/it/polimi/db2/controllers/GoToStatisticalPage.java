@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/questionnaire2")
-public class GoToQuestionnaire2Page extends HttpServlet {
+@WebServlet("/statistical")
+public class GoToStatisticalPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
-    List<Question> marketingQuestions;
+    List<Question> statisticalQuestions;
     QuestionService questionService;
 
 
@@ -44,15 +44,15 @@ public class GoToQuestionnaire2Page extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        marketingQuestions = new ArrayList<>();
+        statisticalQuestions = new ArrayList<>();
 
         if (!AuthUtils.checkAuthentication(request, response)) return;
 
-        marketingQuestions = questionService.getTodayMarketingQuestions();
+        statisticalQuestions = questionService.getStatisticalQuestions();
 
-        ctx.setVariable("marketingQuestions", marketingQuestions);
+        ctx.setVariable("statisticalQuestions", statisticalQuestions);
 
-        templateEngine.process("/WEB-INF/views/questionnaire2", ctx, response.getWriter());
+        templateEngine.process("/WEB-INF/views/statistical", ctx, response.getWriter());
         response.setContentType("text/plain");
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.PDay;
 import it.polimi.db2.services.PDayService;
+import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -43,6 +44,9 @@ public class GoToDeletionPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthUtils.checkAdminPrivilegies(request, response)) return;
+
         pDayList = pDayService.getAllPDays();
 
         dateList = pDayList

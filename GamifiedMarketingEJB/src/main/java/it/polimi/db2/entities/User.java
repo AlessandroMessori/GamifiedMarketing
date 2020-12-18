@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "User", schema = "GamifiedMarketing")
@@ -62,6 +63,6 @@ public class User {
         random.nextBytes(salt);
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        this.password = factory.generateSecret(spec).getEncoded().toString();
+        this.password = Arrays.toString(factory.generateSecret(spec).getEncoded());
     }
 }
