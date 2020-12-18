@@ -12,14 +12,14 @@
     <h2>Questionnaire - Marketing Section</h2>
 </div>
 
-<div>
-    <div  th:each="s : ${marketingQuestions}">
+<form action="marketing" method="POST">
+    <div th:each="s : ${marketingQuestions}">
         <h3 th:text="${s.getText()}"></h3>
-        <textarea></textarea>
+        <textarea th:id="${'question-'+s.getId()}"  th:name="${'question-'+s.getId()}"></textarea>
     </div>
-</div>
-<a href="/pday">Go To Home Page</a>
-<a href="/statistical">Next</a>
+    <a href="/pday">Go To Home Page</a>
+    <input type="submit" value="Next"/>
+</form>
 
 </body>
 </html>

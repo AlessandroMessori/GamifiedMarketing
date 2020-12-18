@@ -1,6 +1,7 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Question;
+import it.polimi.db2.services.AnswerService;
 import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -26,8 +28,14 @@ public class GoToStatisticalPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TemplateEngine templateEngine;
 
-    List<Question> statisticalQuestions;
+    @EJB(name = "AnswerService")
+    AnswerService answerService;
+
+    @EJB(name = "QuestionService")
     QuestionService questionService;
+
+    List<Question> statisticalQuestions;
+
 
 
     public void init() throws ServletException {
@@ -37,7 +45,6 @@ public class GoToStatisticalPage extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
-        this.questionService = new QuestionService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
