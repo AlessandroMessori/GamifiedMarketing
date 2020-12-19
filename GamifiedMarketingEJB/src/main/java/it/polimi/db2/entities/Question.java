@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Question", schema = "GamifiedMarketing")
-@NamedQuery(name = "Question.getStatisticalQuestions", query = "SELECT q FROM Question  q WHERE q.isMarketing = false ")
+@NamedQuery(name = "Question.getStatisticalQuestions", query = "SELECT q FROM Question  q WHERE q.isMarketing = false AND q.day = ?1")
 @NamedQuery(name = "Question.getMarketingQuestions", query = "SELECT q FROM Question  q WHERE q.isMarketing = true AND q.day = ?1")
 public class Question {
 

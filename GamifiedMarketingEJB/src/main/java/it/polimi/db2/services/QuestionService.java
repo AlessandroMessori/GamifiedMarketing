@@ -22,9 +22,10 @@ public class QuestionService {
 
     }
 
-    public List<Question> getStatisticalQuestions() {
+    public List<Question> getTodayStatisticalQuestions() {
 
         List<Question> qList = em.createNamedQuery("Question.getStatisticalQuestions", Question.class)
+                .setParameter(1, (new Date()), TemporalType.DATE)
                 .getResultList();
 
         return qList;
@@ -40,7 +41,7 @@ public class QuestionService {
     }
 
     public static void main(String[] args) {
-        System.out.println(new QuestionService().getTodayMarketingQuestions());
+        System.out.println(new QuestionService().getTodayStatisticalQuestions());
     }
 
 

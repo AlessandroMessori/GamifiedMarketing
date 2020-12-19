@@ -24,6 +24,7 @@ public class ConnectionTester extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println(result);
+        response.sendRedirect("/pday");
         out.close();
     }
 

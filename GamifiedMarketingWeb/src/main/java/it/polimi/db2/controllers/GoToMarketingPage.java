@@ -92,6 +92,6 @@ public class GoToMarketingPage extends HttpServlet {
             ctx.setVariable("message", "There was an error in saving the marketing questions");
         }
 
-        templateEngine.process("/WEB-INF/views/statistical", ctx, response.getWriter());
+       response.sendRedirect("/statistical");
     }
 }

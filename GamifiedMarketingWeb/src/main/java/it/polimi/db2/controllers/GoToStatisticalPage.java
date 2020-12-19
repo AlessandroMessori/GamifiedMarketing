@@ -1,9 +1,11 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Question;
+import it.polimi.db2.entities.User;
 import it.polimi.db2.services.AnswerService;
 import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -21,6 +23,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static java.lang.Integer.parseInt;
 
 
 @WebServlet("/statistical")
@@ -55,11 +59,41 @@ public class GoToStatisticalPage extends HttpServlet {
 
         if (!AuthUtils.checkAuthentication(request, response)) return;
 
-        statisticalQuestions = questionService.getStatisticalQuestions();
+        statisticalQuestions = questionService.getTodayStatisticalQuestions();
+        System.out.println(statisticalQuestions);
 
         ctx.setVariable("statisticalQuestions", statisticalQuestions);
 
         templateEngine.process("/WEB-INF/views/statistical", ctx, response.getWriter());
         response.setContentType("text/plain");
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        List<Integer> idsList = new ArrayList<>();
+        List<String> answerList = new ArrayList<>();
+        User user = (User) request.getSession().getAttribute("user");
+
+        if (!AuthUtils.checkAuthentication(request, response)) return;
+
+
+        // obtain and escape params
+        for (String key : request.getParameterMap().keySet()) {
+            idsList.add(parseInt(key.split("-")[1]));
+            answerList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
+        }
+
+
+        try {
+            answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
+            ctx.setVariable("message", "Statistical questions saved succesfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.setVariable("message", "There was an error in saving the statistical questions");
+        }
+
+        response.sendRedirect("/greetings");
     }
 }

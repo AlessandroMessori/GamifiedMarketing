@@ -12,16 +12,15 @@
     <h2>Questionnaire - Statistical Section</h2>
 </div>
 
-<div>
+<form action="statistical" method="POST">
     <div  th:each="s : ${statisticalQuestions}">
         <h3 th:text="${s.getText()}"></h3>
-        <textarea></textarea>
+        <textarea  th:id="${'question-'+s.getId()}"  th:name="${'question-'+s.getId()}"></textarea>
     </div>
-</div>
 <a href="/home">Go To Home Page</a>
 <a href="/marketing">Go Back</a>
-<a href="/greetings">Next</a>
-
+<input type="submit" value="Submit"/>
+</form>
 </body>
 </html>
 
