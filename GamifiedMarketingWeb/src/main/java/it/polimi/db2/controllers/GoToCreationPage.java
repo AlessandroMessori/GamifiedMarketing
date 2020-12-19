@@ -3,7 +3,9 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.Product;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ProductService;
+import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -21,6 +23,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static java.lang.Integer.parseInt;
 
 
 @WebServlet("/admin/creation")
@@ -60,6 +64,7 @@ public class GoToCreationPage extends HttpServlet {
             throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        List<String> questionList = new ArrayList<>();
 
         // obtain and escape params
         String product = StringEscapeUtils.escapeJava(request.getParameter("product"));
@@ -77,8 +82,15 @@ public class GoToCreationPage extends HttpServlet {
             return;
         }
 
+        // obtain and escape params
+        for (String key : request.getParameterMap().keySet()) {
+            if (key.contains("question")) {
+                questionList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
+            }
+        }
+
         try {
-            pDayService.createPday(product, day);
+            pDayService.createPday(product, day, questionList);
             ctx.setVariable("message", "PDay Saved Successfully");
         } catch (Exception e) {
             e.printStackTrace();

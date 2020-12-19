@@ -1,14 +1,15 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entities.Answer;
+import it.polimi.db2.entities.PDay;
 import it.polimi.db2.entities.Question;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 @Stateless
 public class QuestionService {
@@ -17,6 +18,9 @@ public class QuestionService {
             .createEntityManagerFactory("GamifiedMarketing");
 
     private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+
+    @EJB(name = "PDayService")
+    PDayService pDayService;
 
     public QuestionService() {
 
@@ -39,6 +43,19 @@ public class QuestionService {
 
         return qList;
     }
+
+    /*public void saveQuestions(Date day, List<String> questionsText) throws Exception {
+        PDay pday;
+
+        for (String s : questionsText) {
+            Question question = new Question();
+            question.setInputType("text");
+            question.setIsMarketing(false);
+            question.setDay(day);
+            question.setText(s);
+        }
+    }*/
+
 
     public static void main(String[] args) {
         System.out.println(new QuestionService().getTodayStatisticalQuestions());

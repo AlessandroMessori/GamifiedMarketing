@@ -2,6 +2,7 @@ package it.polimi.db2.services;
 
 import it.polimi.db2.entities.PDay;
 import it.polimi.db2.entities.Product;
+import it.polimi.db2.entities.Question;
 import it.polimi.db2.exceptions.NoPDayException;
 
 import javax.ejb.EJB;
@@ -9,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,9 +40,11 @@ public class PDayService {
     }
 
 
-    public PDay createPday(String productName, String day) throws Exception {
+    public PDay createPday(String productName, String day, List<String> questionsText) throws Exception {
         PDay pDay = new PDay();
         Product product;
+        List<Question> questions = new ArrayList<>();
+
         EntityTransaction transaction = em.getTransaction();
 
         transaction.begin();
@@ -52,9 +56,24 @@ public class PDayService {
         pDay.setDay(date);
 
         pDay.setProduct(product);
+
         em.persist(pDay);
 
+        for (String q : questionsText) {
+            Question question = new Question();
+            question.setText(q);
+            question.setInputType("text");
+            //question.setPDay(pDay);
+            question.setDay(pDay.getDate());
+            question.setIsMarketing(false);
+            questions.add(question);
+            em.persist(question);
+        }
+
+        //pDay.setQuestions(questions);
+
         transaction.commit();
+
         return pDay;
 
     }
