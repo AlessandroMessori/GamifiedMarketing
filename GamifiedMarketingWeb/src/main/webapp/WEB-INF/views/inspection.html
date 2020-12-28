@@ -18,15 +18,15 @@
 
     <div class="userList">
         <h3>Completed</h3>
-        <div class="userRow" th:each="u: ${userList}">
-            <span th:text="${u.getUname()}"></span>
+        <div class="userRow" th:each="g: ${answers}">
+            <h4 th:text="${g.getKey()}"></h4>
+            <div class="userRow" th:each="a: ${g.getValue()}">
+                <h5 th:text="${a.getQuestion().getText()}"></h5>
+                <hr>
+                <h5 th:text="${a.getText()}"></h5>
+            </div>
         </div>
 
-
-        <h3>Deleted</h3>
-        <div class="userRow" th:each="u: ${deletedUserList}">
-            <span th:text="${u.getUname()}"></span>
-        </div>
     </div>
 
 

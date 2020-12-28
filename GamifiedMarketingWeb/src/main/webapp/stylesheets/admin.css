@@ -19,10 +19,6 @@ form * {
     margin: 1%;
 }
 
-textarea {
-    display: block;
-}
-
 .userRow {
     border: 1px solid black;
 }

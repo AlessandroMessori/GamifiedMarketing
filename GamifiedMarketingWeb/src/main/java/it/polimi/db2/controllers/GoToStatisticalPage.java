@@ -40,8 +40,6 @@ public class GoToStatisticalPage extends HttpServlet {
 
     List<Question> statisticalQuestions;
 
-
-
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);

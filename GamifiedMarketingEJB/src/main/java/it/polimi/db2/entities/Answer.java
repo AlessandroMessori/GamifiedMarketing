@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Answer")
 @IdClass(AnswerKey.class)
-@NamedQuery(name = "Answer.findAnswerByEmailAndId", query = "SELECT a FROM Answer a WHERE a.userEmail=?1 AND a.questionId = ?2")
+@NamedQuery(name = "Answer.findAnswerByDate", query = "SELECT a FROM Answer a WHERE a.question.day = ?1")
 public class Answer {
 
     @Id
@@ -15,6 +15,10 @@ public class Answer {
     private int questionId;
 
     private String text;
+
+    @OneToOne()
+    @JoinColumn(name = "questionId",insertable = false,updatable = false)
+    private Question question;
 
     public Answer() {
 
@@ -42,5 +46,9 @@ public class Answer {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Question getQuestion() {
+        return question;
     }
 }

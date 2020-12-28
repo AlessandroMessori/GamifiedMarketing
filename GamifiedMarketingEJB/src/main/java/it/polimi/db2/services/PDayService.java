@@ -27,6 +27,9 @@ public class PDayService {
     public PDayService() {
     }
 
+
+
+
     public PDay getTodayProduct() throws NoPDayException {
         List<PDay> result = em.createNamedQuery("PDay.getTodayProduct", PDay.class)
                 .setParameter(1, (new Date()), TemporalType.DATE)
@@ -63,14 +66,11 @@ public class PDayService {
             Question question = new Question();
             question.setText(q);
             question.setInputType("text");
-            //question.setPDay(pDay);
             question.setDay(pDay.getDate());
-            question.setIsMarketing(false);
+            question.setIsMarketing(true);
             questions.add(question);
             em.persist(question);
         }
-
-        //pDay.setQuestions(questions);
 
         transaction.commit();
 

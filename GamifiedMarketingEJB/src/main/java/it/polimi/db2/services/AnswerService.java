@@ -3,11 +3,9 @@ package it.polimi.db2.services;
 import it.polimi.db2.entities.Answer;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -23,10 +21,9 @@ public class AnswerService {
 
     }
 
-    public List<Answer> findAnswersByEmailAndId(String userEmail, int questionId) {
-        return em.createNamedQuery("Answer.findAnswerByEmailAndId", Answer.class)
-                .setParameter(1, userEmail)
-                .setParameter(2, questionId)
+    public List<Answer> findAnswersByDate(Date date) {
+        return em.createNamedQuery("Answer.findAnswerByDate", Answer.class)
+                .setParameter(1, (date), TemporalType.DATE)
                 .getResultList();
     }
 
@@ -55,7 +52,9 @@ public class AnswerService {
     }
 
     public static void main(String[] args) throws Exception {
-        new AnswerService().saveUserAnswers("Mail", Arrays.asList(0, 1, 2), Arrays.asList("sljkdld", "lkòdsjksd", "skjfk"));
+        //new AnswerService().saveUserAnswers("Mail", Arrays.asList(0, 1, 2), Arrays.asList("sljkdld", "lkòdsjksd", "skjfk"));
+        System.out.println(new AnswerService().findAnswersByDate(new Date()));
+
     }
 
 
