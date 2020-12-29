@@ -2,17 +2,15 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Answer;
 import it.polimi.db2.services.AnswerService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
@@ -31,10 +29,8 @@ public class GoToInspectionPage extends HttpServlet {
 
     @EJB(name = "AnswerService")
     AnswerService answerService;
-
-    List<Answer> answers;
-    HashMap<String, List<Answer>> answerGroups;
-
+    Map<String, Pair<List<Answer>, Integer>> allAnswers, completedAnswers;
+    List<String> deletedUsers;
 
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
@@ -46,32 +42,39 @@ public class GoToInspectionPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        answers = answerService.findAnswersByDate(new Date());
-        answerGroups = groupAnswersByUser(answers);
+
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        ctx.setVariable("answers", answerGroups);
+
+        try {
+            allAnswers = answerService.findAnswersByDate(new Date());
+            deletedUsers = getDeletedUsers();
+
+            completedAnswers = allAnswers
+                    .entrySet()
+                    .stream()
+                    .filter(item -> item.getValue().getRight() > 0)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            ctx.setVariable("answers", completedAnswers);
+            ctx.setVariable("deletedUsers", deletedUsers);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ctx.setVariable("error", e.getMessage());
+        }
+
         templateEngine.process("/WEB-INF/views/inspection", ctx, response.getWriter());
         response.setContentType("text/plain");
     }
 
-    HashMap<String, List<Answer>> groupAnswersByUser(List<Answer> answers) {
-        HashMap<String, List<Answer>> hashMap = new HashMap<>();
-
-        for (Answer a : answers) {
-            String currentUserEmail = a.getUserEmail();
-            if (!hashMap.containsKey(currentUserEmail)) {
-                List<Answer> list = new ArrayList<Answer>();
-                list.add(a);
-
-                hashMap.put(currentUserEmail, list);
-            } else {
-                hashMap.get(currentUserEmail).add(a);
+    List<String> getDeletedUsers() {
+        List<String> deletedUsers = new ArrayList<>();
+        for (HashMap.Entry<String, Pair<List<Answer>, Integer>> entry : allAnswers.entrySet()) {
+            if (entry.getValue().getRight() == 0) {
+                deletedUsers.add(entry.getKey());
             }
         }
-
-        return hashMap;
+        return deletedUsers;
     }
-
 
 }
