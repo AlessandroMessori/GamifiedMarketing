@@ -4,17 +4,15 @@
     <link rel="stylesheet" type="text/css" href="../../stylesheets/admin.css"
           th:href="@{/stylesheets/admin.css}"/>
     <title>Gamified Marketing</title>
+    <script src="../../scripts/inspection.js" th:src="@{/scripts/inspection.js}"></script>
+
 </head>
 <body>
 <h1>Gamified Marketing</h1>
 <hr/>
 <div>
     <h2>Inspect Questionnaire</h2>
-    <select id="product" name="product">
-        <option class="review" th:each="p,iterStat : ${productList}"
-                th:text="${p.getName()} + ' ' +${dateList[iterStat.index]}"
-                th:value="${p.getName()} + ' ' +${dateList[iterStat.index]}"></option>
-    </select>
+    <input type="date" id="day" name="day" th:value="${day}" onchange="changeDate()" placeholder="Select Date">
 
     <div class="userList">
         <h3>Completed</h3>

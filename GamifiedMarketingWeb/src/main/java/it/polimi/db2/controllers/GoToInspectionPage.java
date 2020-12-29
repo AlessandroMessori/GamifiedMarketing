@@ -3,12 +3,15 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.Answer;
 import it.polimi.db2.services.AnswerService;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,9 +48,25 @@ public class GoToInspectionPage extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        String dayString = StringEscapeUtils.escapeJava(request.getParameter("day"));
+        Date day = null;
+
+        if (dayString == null) {
+            dayString = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        }
+
 
         try {
-            allAnswers = answerService.findAnswersByDate(new Date());
+            day = new SimpleDateFormat("yyyy-MM-dd").parse(dayString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        ctx.setVariable("day", dayString);
+
+        try {
+            allAnswers = answerService.findAnswersByDate(day);
             deletedUsers = getDeletedUsers();
 
             completedAnswers = allAnswers
