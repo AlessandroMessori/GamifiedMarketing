@@ -27,7 +27,6 @@ public class GoToLoginPage extends HttpServlet {
     @EJB(name = "UserService")
     UserService userService;
 
-
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -66,7 +65,7 @@ public class GoToLoginPage extends HttpServlet {
         }
 
         try {
-            User user = userService.checkCredentials(email, pwd);
+            User user = userService.login(email, pwd);
             request.getSession().setAttribute("user", user);
             response.sendRedirect("/pday");
         } catch (Exception e) {

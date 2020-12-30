@@ -15,6 +15,7 @@
         <class>it.polimi.db2.entities.Question</class>
         <class>it.polimi.db2.entities.Points</class>
         <class>it.polimi.db2.entities.Answer</class>
+        <class>it.polimi.db2.entities.Log</class>
         <properties>
             <!-- The JDBC driver of your database -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
