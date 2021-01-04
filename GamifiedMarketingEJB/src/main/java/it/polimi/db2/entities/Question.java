@@ -2,11 +2,14 @@ package it.polimi.db2.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Question", schema = "GamifiedMarketing")
+@NamedQuery(name = "Question.getAllQuestions", query = "SELECT q FROM Question  q WHERE q.day = ?1")
 @NamedQuery(name = "Question.getStatisticalQuestions", query = "SELECT q FROM Question  q WHERE q.isMarketing = false AND q.day = ?1")
 @NamedQuery(name = "Question.getMarketingQuestions", query = "SELECT q FROM Question  q WHERE q.isMarketing = true AND q.day = ?1")
+@NamedQuery(name = "Question.deleteQuestions", query = "DELETE FROM Question q WHERE q.day = ?1")
 public class Question {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +23,9 @@ public class Question {
     private boolean isMarketing;
 
     private Date day;
+
+    @OneToMany(mappedBy = "questionId",cascade = CascadeType.ALL)
+    private List<Answer> answers;
 
     public Question() {
 

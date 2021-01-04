@@ -7,7 +7,7 @@ import java.util.Date;
 @Table(name = "Points", schema = "GamifiedMarketing")
 @IdClass(PointsKey.class)
 @NamedQuery(name = "Points.getTodayLeaderboard", query = "SELECT p FROM Points p WHERE p.questionnaireDate = ?1")
-
+@NamedQuery(name = "Points.deleteLeaderboard", query = "DELETE FROM Points p WHERE p.questionnaireDate = ?1")
 public class Points {
 
     @Id

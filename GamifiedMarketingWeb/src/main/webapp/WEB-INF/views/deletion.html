@@ -10,11 +10,11 @@
 <hr/>
 <div>
     <h2>Delete Product of The Day</h2>
-    <form>
+    <form action="/admin/deletion" method="POST">
         <select id="product" name="product">
             <option class="review" th:each="p,iterStat : ${pDayList}"
                     th:text="${p.getProduct().getName()} + ' ' +${dateList[iterStat.index]}"
-                    th:value="${p.getProduct().getName()} + ' ' +${dateList[iterStat.index]}"></option>
+                    th:value="${dateList[iterStat.index]}"></option>
             <input type="submit" id="submitButton" value="Delete">
         </select>
     </form>

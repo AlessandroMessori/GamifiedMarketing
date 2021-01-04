@@ -17,7 +17,7 @@ public class Answer {
     private String text;
 
     @OneToOne()
-    @JoinColumn(name = "questionId",insertable = false,updatable = false)
+    @JoinColumn(name = "questionId", insertable = false, updatable = false)
     private Question question;
 
     public Answer() {

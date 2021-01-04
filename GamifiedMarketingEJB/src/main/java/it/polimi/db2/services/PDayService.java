@@ -1,6 +1,7 @@
 package it.polimi.db2.services;
 
 import it.polimi.db2.entities.PDay;
+import it.polimi.db2.entities.Points;
 import it.polimi.db2.entities.Product;
 import it.polimi.db2.entities.Question;
 import it.polimi.db2.exceptions.NoPDayException;
@@ -8,6 +9,7 @@ import it.polimi.db2.exceptions.NoPDayException;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.transaction.Transaction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,8 +30,6 @@ public class PDayService {
     }
 
 
-
-
     public PDay getTodayProduct() throws NoPDayException {
         List<PDay> result = em.createNamedQuery("PDay.getTodayProduct", PDay.class)
                 .setParameter(1, (new Date()), TemporalType.DATE)
@@ -43,7 +43,7 @@ public class PDayService {
     }
 
 
-    public PDay createPday(String productName, String day, List<String> questionsText) throws Exception {
+    public void createPday(String productName, String day, List<String> questionsText) throws Exception {
         PDay pDay = new PDay();
         Product product;
         List<Question> questions = new ArrayList<>();
@@ -74,13 +74,33 @@ public class PDayService {
 
         transaction.commit();
 
-        return pDay;
-
     }
 
     public List<PDay> getAllPDays() {
         return em.createNamedQuery("PDay.getAllProducts", PDay.class)
                 .getResultList();
+    }
+
+    public void deletePDayData(Date day) {
+
+        EntityTransaction transaction = em.getTransaction();
+
+        transaction.begin();
+
+        em.createNamedQuery("Question.deleteQuestions")
+                .setParameter(1, day, TemporalType.DATE)
+                .executeUpdate();
+
+        em.createNamedQuery("Points.deleteLeaderboard")
+                .setParameter(1, day, TemporalType.DATE)
+                .executeUpdate();
+
+        transaction.commit();
+
+    }
+
+    public static void main(String[] args) {
+        new PDayService().deletePDayData(new Date());
     }
 
 
