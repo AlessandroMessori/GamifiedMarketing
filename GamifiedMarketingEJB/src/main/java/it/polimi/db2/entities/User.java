@@ -31,8 +31,10 @@ public class User {
 
     private boolean isAdmin;
 
+    private boolean isBanned;
+
     @OneToMany(mappedBy = "userEmail")
-    @Filter(name="answerFilter", condition=" day= :day")
+    @Filter(name = "answerFilter", condition = " day= :day")
     private List<Answer> answers;
 
     public User() {
@@ -55,6 +57,10 @@ public class User {
         return isAdmin;
     }
 
+    public boolean getIsBanned() {
+        return isBanned;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -70,6 +76,11 @@ public class User {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         this.password = Arrays.toString(factory.generateSecret(spec).getEncoded());
+    }
+
+    public void setIsBanned(boolean isBanned) {
+        this.isBanned = isBanned;
+
     }
 
     public List<Answer> getAnswers() {

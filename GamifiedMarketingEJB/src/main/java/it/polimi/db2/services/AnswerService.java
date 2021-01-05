@@ -1,5 +1,8 @@
 package it.polimi.db2.services;
 
+import it.polimi.db2.entities.Offensive_Words;
+import it.polimi.db2.entities.User;
+import it.polimi.db2.exceptions.BannedWordException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import it.polimi.db2.entities.Answer;
@@ -80,18 +83,55 @@ public class AnswerService {
 
         transaction.begin();
 
+        List<String> offensiveWords = em.createNamedQuery("Offensive_Words.findAll", Offensive_Words.class)
+                .getResultList()
+                .stream()
+                .map(Offensive_Words::getWord)
+                .collect(Collectors.toList());
+
+
         ListIterator<Integer> idsIterator = questionsIds.listIterator();
         ListIterator<String> answersIterator = answersText.listIterator();
 
         while (idsIterator.hasNext() && answersIterator.hasNext()) {
+
+            String currentAnswer = answersIterator.next();
+
+            if (checkWordInList(offensiveWords,currentAnswer)) {
+                User user;
+                EntityTransaction banUserTransaction;
+
+                transaction.rollback();
+                banUserTransaction = em.getTransaction();
+                banUserTransaction.begin();
+
+                user = em.find(User.class, userEmail);
+
+                user.setIsBanned(true);
+                em.flush();
+
+                banUserTransaction.commit();
+
+                throw new BannedWordException("You used an offensive word,you are now banned");
+            }
+
             Answer answer = new Answer();
             answer.setUserEmail(userEmail);
-            answer.setText(answersIterator.next());
+            answer.setText(currentAnswer);
             answer.setQuestionId(idsIterator.next());
             em.persist(answer);
         }
 
         transaction.commit();
+    }
+
+    private boolean checkWordInList(List<String> wordList, String word) {
+        for (String w : wordList) {
+            if (word.contains(w)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) throws Exception {

@@ -2,6 +2,7 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Question;
 import it.polimi.db2.entities.User;
+import it.polimi.db2.exceptions.BannedWordException;
 import it.polimi.db2.services.AnswerService;
 import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
@@ -56,7 +57,7 @@ public class GoToMarketingPage extends HttpServlet {
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         marketingQuestions = new ArrayList<>();
 
-        if (!AuthUtils.checkAuthentication(request, response)) return;
+        if (!AuthUtils.checkAuthentication(request, response) || AuthUtils.checkUserBan(request, response)) return;
 
         marketingQuestions = questionService.getTodayMarketingQuestions();
 
@@ -87,11 +88,12 @@ public class GoToMarketingPage extends HttpServlet {
         try {
             answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
             ctx.setVariable("message", "Marketing questions saved succesfully!");
+            response.sendRedirect("/statistical");
+        } catch (BannedWordException e) {
+            response.sendRedirect("/pday");
         } catch (Exception e) {
             e.printStackTrace();
             ctx.setVariable("message", "There was an error in saving the marketing questions");
         }
-
-       response.sendRedirect("/statistical");
     }
 }
