@@ -97,7 +97,7 @@ public class AnswerService {
 
             String currentAnswer = answersIterator.next();
 
-            if (checkWordInList(offensiveWords,currentAnswer)) {
+            if (checkWordInList(offensiveWords, currentAnswer)) {
                 User user;
                 EntityTransaction banUserTransaction;
 
@@ -113,13 +113,14 @@ public class AnswerService {
                 banUserTransaction.commit();
 
                 throw new BannedWordException("You used an offensive word,you are now banned");
+            } else if (!currentAnswer.equals("")) {
+                Answer answer = new Answer();
+                answer.setUserEmail(userEmail);
+                answer.setText(currentAnswer);
+                answer.setQuestionId(idsIterator.next());
+                em.persist(answer);
             }
 
-            Answer answer = new Answer();
-            answer.setUserEmail(userEmail);
-            answer.setText(currentAnswer);
-            answer.setQuestionId(idsIterator.next());
-            em.persist(answer);
         }
 
         transaction.commit();

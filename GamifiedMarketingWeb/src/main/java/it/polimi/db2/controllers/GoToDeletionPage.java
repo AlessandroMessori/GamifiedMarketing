@@ -50,7 +50,11 @@ public class GoToDeletionPage extends HttpServlet {
 
         if (!AuthUtils.checkAdminPrivilegies(request, response)) return;
 
-        pDayList = pDayService.getAllPDays();
+        pDayList = pDayService
+                .getAllPDays()
+                .stream()
+                .filter(pDay -> pDay.getDate().before(new Date()) || pDay.getDate().equals(new Date()))
+                .collect(Collectors.toList());
 
         dateList = pDayList
                 .stream()

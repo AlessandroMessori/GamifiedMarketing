@@ -62,7 +62,6 @@ public class UserService {
         boolean alreadyExists;
         User user;
 
-
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
