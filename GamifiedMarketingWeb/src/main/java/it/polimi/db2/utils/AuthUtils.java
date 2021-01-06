@@ -31,12 +31,12 @@ public class AuthUtils {
 
     public static boolean checkUserBan(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        if (session.isNew() || session.getAttribute("user") == null || !((User) session.getAttribute("user")).getIsBanned()) {
+        if (session.isNew() || session.getAttribute("user") == null || ((User) session.getAttribute("user")).getIsBanned()) {
             response.sendRedirect("/pday");
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 }

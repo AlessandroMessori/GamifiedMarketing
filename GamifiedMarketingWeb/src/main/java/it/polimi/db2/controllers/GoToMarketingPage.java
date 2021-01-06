@@ -39,7 +39,7 @@ public class GoToMarketingPage extends HttpServlet {
     @EJB(name = "QuestionService")
     QuestionService questionService;
 
-    List<Question> marketingQuestions;
+    List<Question> marketingQuestions, statisticalQuestions;
 
 
     public void init() throws ServletException {
@@ -56,12 +56,15 @@ public class GoToMarketingPage extends HttpServlet {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         marketingQuestions = new ArrayList<>();
+        statisticalQuestions = new ArrayList<>();
 
         if (!AuthUtils.checkAuthentication(request, response) || AuthUtils.checkUserBan(request, response)) return;
 
         marketingQuestions = questionService.getTodayMarketingQuestions();
+        statisticalQuestions = questionService.getTodayStatisticalQuestions();
 
         ctx.setVariable("marketingQuestions", marketingQuestions);
+        ctx.setVariable("statisticalQuestions", statisticalQuestions);
 
         templateEngine.process("/WEB-INF/views/marketing", ctx, response.getWriter());
         response.setContentType("text/plain");
@@ -75,8 +78,7 @@ public class GoToMarketingPage extends HttpServlet {
         List<String> answerList = new ArrayList<>();
         User user = (User) request.getSession().getAttribute("user");
 
-        if (!AuthUtils.checkAuthentication(request, response)) return;
-
+        if (!AuthUtils.checkAuthentication(request, response) || AuthUtils.checkUserBan(request, response)) return;
 
         // obtain and escape params
         for (String key : request.getParameterMap().keySet()) {
@@ -87,8 +89,8 @@ public class GoToMarketingPage extends HttpServlet {
 
         try {
             answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
-            ctx.setVariable("message", "Marketing questions saved succesfully!");
-            response.sendRedirect("/statistical");
+            ctx.setVariable("message", "Questions saved successfully!");
+            response.sendRedirect("/greetings");
         } catch (BannedWordException e) {
             response.sendRedirect("/pday");
         } catch (Exception e) {

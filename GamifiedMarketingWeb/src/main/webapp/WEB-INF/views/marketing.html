@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="../../stylesheets/questionnaire.css"
           th:href="@{/stylesheets/questionnaire.css}"/>
     <title>Gamified Marketing</title>
+    <script src="../../scripts/questionnaire.js" th:src="@{/scripts/questionnaire.js}"></script>
+
 </head>
 <body>
 <h1>Gamified Marketing</h1>
@@ -13,12 +15,27 @@
 </div>
 
 <form action="marketing" method="POST">
-    <div th:each="s : ${marketingQuestions}">
-        <h3 th:text="${s.getText()}"></h3>
-        <textarea th:id="${'question-'+s.getId()}"  th:name="${'question-'+s.getId()}"></textarea>
+    <div id="marketingSection">
+        <div th:each="s : ${marketingQuestions}">
+            <h3 th:text="${s.getText()}"></h3>
+            <textarea th:id="${'question-'+s.getId()}" th:name="${'question-'+s.getId()}"></textarea>
+        </div>
+
+        <a href="/pday">Go To Home Page</a>
+        <input type="button" value="Next" onclick="goToStatisticalSection()"/>
     </div>
-    <a href="/pday">Go To Home Page</a>
-    <input type="submit" value="Next"/>
+
+    <div id="statisticalSection">
+        <div th:each="s : ${statisticalQuestions}">
+            <h3 th:text="${s.getText()}"></h3>
+            <textarea th:id="${'question-'+s.getId()}" th:name="${'question-'+s.getId()}"></textarea>
+        </div>
+        <input type="button" value="Back" onclick="goToMarketingSection()"/>
+        <input type="button" value="Cancel" onClick="goToHome()"/>
+        <input type="submit" value="Submit"/>
+    </div>
+
+
 </form>
 
 </body>
