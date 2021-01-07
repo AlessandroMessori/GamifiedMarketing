@@ -1,4 +1,36 @@
+const checkEmptyFields = () => {
+
+    let check = false
+
+    document
+        .getElementById("marketingSection")
+        .childNodes
+        .forEach(item => {
+            item.childNodes.forEach(
+                subItem => {
+
+                    if (subItem.nodeName === "TEXTAREA") {
+                        console.log(subItem.value)
+                    }
+
+                    if (subItem.nodeName === "TEXTAREA" && subItem.value === "") {
+                        check = true
+                    }
+                }
+            )
+        })
+
+    return check
+}
+
+
 const goToStatisticalSection = () => {
+
+    if (checkEmptyFields()) {
+        alert("Answer all the questions before proceeding")
+        return
+    }
+
     const statisticalSection = document.getElementById("statisticalSection")
     const marketingSection = document.getElementById("marketingSection")
 
@@ -20,5 +52,6 @@ const goToMarketingSection = () => {
     statisticalSection.style.visibility = "hidden"
     statisticalSection.style.position = "absolute"
 }
+
 
 const goToHome = () => window.location.href = "/pday"
