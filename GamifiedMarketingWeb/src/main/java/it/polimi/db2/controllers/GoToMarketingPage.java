@@ -3,7 +3,9 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.Question;
 import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.BannedWordException;
+import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.services.AnswerService;
+import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -39,6 +41,9 @@ public class GoToMarketingPage extends HttpServlet {
     @EJB(name = "QuestionService")
     QuestionService questionService;
 
+    @EJB(name = "PDayService")
+    PDayService pDayService;
+
     List<Question> marketingQuestions, statisticalQuestions;
 
 
@@ -59,6 +64,15 @@ public class GoToMarketingPage extends HttpServlet {
         statisticalQuestions = new ArrayList<>();
 
         if (!AuthUtils.checkAuthentication(request, response) || AuthUtils.checkUserBan(request, response)) return;
+
+        //checks if a pDay for today as been added
+        try {
+            pDayService.getTodayProduct();
+        } catch (NoPDayException e) {
+            e.printStackTrace();
+            response.sendRedirect("/pday");
+            return;
+        }
 
         marketingQuestions = questionService.getTodayMarketingQuestions();
         statisticalQuestions = questionService.getTodayStatisticalQuestions();

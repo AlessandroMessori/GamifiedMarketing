@@ -1,8 +1,10 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Points;
+import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.exceptions.NoPointsException;
 import it.polimi.db2.services.LeaderboardService;
+import it.polimi.db2.services.PDayService;
 import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -30,6 +32,11 @@ public class GoToLeaderboardPage extends HttpServlet {
 
     @EJB(name = "LeaderboardService")
     LeaderboardService leaderboardService;
+
+
+    @EJB(name = "PDayService")
+    PDayService pDayService;
+
     List<Points> leaderboard;
 
     public void init() throws ServletException {
@@ -42,22 +49,33 @@ public class GoToLeaderboardPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServletContext servletContext = getServletContext();
+        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
         if (!AuthUtils.checkAuthentication(request, response)) return;
+
+
+        //checks if a pDay for today as been added
+        try {
+            pDayService.getTodayProduct();
+        } catch (NoPDayException e) {
+            e.printStackTrace();
+            response.sendRedirect("/pday");
+            return;
+        }
 
         leaderboard = null;
         try {
             leaderboard = leaderboardService.getTodayLeaderboard();
         } catch (NoPointsException e) {
             e.printStackTrace();
+
         }
 
-        leaderboard = leaderboard.stream()
+        leaderboard = leaderboard == null ? null : leaderboard.stream()
                 .sorted((p1, p2) -> p2.getVal() - p1.getVal())
                 .collect(Collectors.toList());
 
-        ServletContext servletContext = getServletContext();
-        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("leaderboard", leaderboard);
         templateEngine.process("/WEB-INF/views/leaderboard", ctx, response.getWriter());
         response.setContentType("text/plain");
