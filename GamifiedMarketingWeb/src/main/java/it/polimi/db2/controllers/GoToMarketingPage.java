@@ -5,6 +5,7 @@ import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.BannedWordException;
 import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.services.AnswerService;
+import it.polimi.db2.services.LeaderboardService;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.QuestionService;
 import it.polimi.db2.utils.AuthUtils;
@@ -43,6 +44,9 @@ public class GoToMarketingPage extends HttpServlet {
 
     @EJB(name = "PDayService")
     PDayService pDayService;
+
+    @EJB(name = "LeaderboardService")
+    LeaderboardService leaderboardService;
 
     List<Question> marketingQuestions, statisticalQuestions;
 
@@ -91,25 +95,31 @@ public class GoToMarketingPage extends HttpServlet {
         List<Integer> idsList = new ArrayList<>();
         List<String> answerList = new ArrayList<>();
         User user = (User) request.getSession().getAttribute("user");
+        String act = request.getParameter("submit");
 
         if (!AuthUtils.checkAuthentication(request, response) || AuthUtils.checkUserBan(request, response)) return;
 
-        // obtain and escape params
-        for (String key : request.getParameterMap().keySet()) {
-            idsList.add(parseInt(key.split("-")[1]));
-            answerList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
-        }
-
-
-        try {
-            answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
-            ctx.setVariable("message", "Questions saved successfully!");
-            response.sendRedirect("/greetings");
-        } catch (BannedWordException e) {
+        if (act.equals("Cancel")) {
+            leaderboardService.cancelQuestionnaire(user.getEmail());
             response.sendRedirect("/pday");
-        } catch (Exception e) {
-            e.printStackTrace();
-            ctx.setVariable("message", "There was an error in saving the marketing questions");
+        } else if (act.equals("Submit")) {
+            // obtain and escape params
+            for (String key : request.getParameterMap().keySet()) {
+                idsList.add(parseInt(key.split("-")[1]));
+                answerList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
+            }
+
+            try {
+                answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
+                ctx.setVariable("message", "Questions saved successfully!");
+                response.sendRedirect("/greetings");
+            } catch (BannedWordException e) {
+                response.sendRedirect("/pday");
+            } catch (Exception e) {
+                e.printStackTrace();
+                ctx.setVariable("message", "There was an error in saving the marketing questions");
+            }
         }
+
     }
 }

@@ -41,4 +41,16 @@ public class Points {
     public User getUser() {
         return user;
     }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setQuestionnaireDate(Date questionnaireDate) {
+        this.questionnaireDate = questionnaireDate;
+    }
+
+    public void setVal(int val) {
+        this.val = val;
+    }
 }

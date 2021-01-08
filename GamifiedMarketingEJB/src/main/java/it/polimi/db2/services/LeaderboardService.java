@@ -4,10 +4,8 @@ import it.polimi.db2.entities.Points;
 import it.polimi.db2.exceptions.NoPointsException;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class LeaderboardService {
     }
 
     public List<Points> getTodayLeaderboard() throws NoPointsException {
-        List<Points> result = em.createNamedQuery("Points.getTodayLeaderboard",Points.class)
+        List<Points> result = em.createNamedQuery("Points.getTodayLeaderboard", Points.class)
                 .setParameter(1, (new Date()), TemporalType.DATE)
                 .getResultList();
 
@@ -32,6 +30,22 @@ public class LeaderboardService {
         }
 
         return result;
+    }
+
+    public void cancelQuestionnaire(String userEmail) {
+        EntityTransaction transaction = em.getTransaction();
+        Points points = new Points();
+
+        transaction.begin();
+
+        points.setUserEmail(userEmail);
+        points.setQuestionnaireDate(new Date());
+        points.setVal(0);
+
+        em.persist(points);
+        em.flush();
+
+        transaction.commit();
     }
 
     public static void main(String[] args) throws NoPointsException {

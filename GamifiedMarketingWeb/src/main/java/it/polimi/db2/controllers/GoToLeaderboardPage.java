@@ -73,6 +73,7 @@ public class GoToLeaderboardPage extends HttpServlet {
         }
 
         leaderboard = leaderboard == null ? null : leaderboard.stream()
+                .filter(points -> points.getVal() > 0)
                 .sorted((p1, p2) -> p2.getVal() - p1.getVal())
                 .collect(Collectors.toList());
 
