@@ -8,6 +8,7 @@ import java.util.Date;
 @IdClass(PointsKey.class)
 @NamedQuery(name = "Points.getTodayLeaderboard", query = "SELECT p FROM Points p WHERE p.questionnaireDate = ?1")
 @NamedQuery(name = "Points.deleteLeaderboard", query = "DELETE FROM Points p WHERE p.questionnaireDate = ?1")
+@NamedQuery(name = "Points.getTodayPoints", query = "SELECT p FROM Points p WHERE p.questionnaireDate = ?1 AND p.userEmail = ?2")
 public class Points {
 
     @Id

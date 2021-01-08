@@ -69,13 +69,14 @@ public class User {
         this.username = username;
     }
 
-    public void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecureRandom random = new SecureRandom();
+    public void setPassword(String password) /*throws NoSuchAlgorithmException, InvalidKeySpecException*/ {
+        /*SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        this.password = Arrays.toString(factory.generateSecret(spec).getEncoded());
+        this.password = Arrays.toString(factory.generateSecret(spec).getEncoded());*/
+        this.password = password;
     }
 
     public void setIsBanned(boolean isBanned) {

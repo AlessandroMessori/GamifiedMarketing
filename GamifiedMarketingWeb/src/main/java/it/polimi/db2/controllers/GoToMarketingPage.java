@@ -1,5 +1,6 @@
 package it.polimi.db2.controllers;
 
+import it.polimi.db2.entities.Points;
 import it.polimi.db2.entities.Question;
 import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.BannedWordException;
@@ -61,9 +62,10 @@ public class GoToMarketingPage extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        User user = (User) request.getSession().getAttribute("user");
+        Points userPoints;
         marketingQuestions = new ArrayList<>();
         statisticalQuestions = new ArrayList<>();
 
@@ -75,6 +77,17 @@ public class GoToMarketingPage extends HttpServlet {
         } catch (NoPDayException e) {
             e.printStackTrace();
             response.sendRedirect("/pday");
+            return;
+        }
+
+        userPoints = leaderboardService.getUserPoints(user.getEmail());
+
+        //redirects to error page if user has already submitted or canceled the questionnaire
+        if (userPoints != null) {
+            String message = userPoints.getVal() > 0 ? "You already completed today's questionnaire" : "You canceled today's questionnaire,you can't take it anymore";
+            ctx.setVariable("message", message);
+            templateEngine.process("/WEB-INF/views/questionnaireError", ctx, response.getWriter());
+            response.setContentType("text/plain");
             return;
         }
 
@@ -105,8 +118,12 @@ public class GoToMarketingPage extends HttpServlet {
         } else if (act.equals("Submit")) {
             // obtain and escape params
             for (String key : request.getParameterMap().keySet()) {
-                idsList.add(parseInt(key.split("-")[1]));
-                answerList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
+
+                if (key.contains("question-")) {
+                    idsList.add(parseInt(key.split("-")[1]));
+                    answerList.add(StringEscapeUtils.escapeJava(request.getParameter(key)));
+                }
+
             }
 
             try {

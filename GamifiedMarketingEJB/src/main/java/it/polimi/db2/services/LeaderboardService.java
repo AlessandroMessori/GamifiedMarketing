@@ -32,6 +32,16 @@ public class LeaderboardService {
         return result;
     }
 
+
+    public Points getUserPoints(String userEmail) {
+        List<Points> result = em.createNamedQuery("Points.getTodayPoints", Points.class)
+                .setParameter(1, (new Date()), TemporalType.DATE)
+                .setParameter(2, userEmail)
+                .getResultList();
+
+        return result.size() == 0 ? null : result.get(0);
+    }
+
     public void cancelQuestionnaire(String userEmail) {
         EntityTransaction transaction = em.getTransaction();
         Points points = new Points();
