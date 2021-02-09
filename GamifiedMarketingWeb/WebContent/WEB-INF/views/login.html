@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/signup.css"
+          th:href="@{/stylesheets/signup.css}"/>
+    <title>Gamified Marketing</title>
+</head>
+<body>
+<h1>Gamified Marketing</h1>
+<hr/>
+<h2>Log In</h2>
+
+<p th:text=" ${successMsg}"></p>
+
+
+<form th:action="@{login}" method="POST">
+    <input type="text" id="email" name="email" placeholder="Username">
+    <input type="password" id="password" name="password" placeholder="Password">
+    <input type="submit" id="submitButton" value="Login">
+    <p th:text=" ${errorMsg}"></p>
+</form>
+<a th:href="@{/signup}"> Go to signup page</a>
+</body>
+</html>
+

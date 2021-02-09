@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../stylesheets/admin.css"
+          th:href="@{/stylesheets/admin.css}"/>
+    <title>Gamified Marketing</title>
+</head>
+<body>
+<h1>Gamified Marketing</h1>
+<hr/>
+<div>
+    <h2>Delete Questionnaire Data</h2>
+    <form th:action="@{/admin/deletion}" method="POST">
+        <select id="product" name="product">
+            <option class="review" th:each="p,iterStat : ${pDayList}"
+                    th:text="${p.getProduct().getName()} + ' ' +${dateList[iterStat.index]}"
+                    th:value="${dateList[iterStat.index]}"></option>
+            <input type="submit" id="submitButton" value="Delete">
+        </select>
+    </form>
+
+    <a th:href="@{/admin/creation">Go to creation page</a>
+    <a th:href="@{/admin/inspection}">Go to inspection page</a>
+
+
+</div>
+
+</body>
+</html>
+
