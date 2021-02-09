@@ -3,7 +3,8 @@ package it.polimi.db2.controllers;
 import it.polimi.db2.entities.Product;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ProductService;
-import it.polimi.db2.utils.AuthUtils;
+import it.polimi.db2.webUtils.AuthUtils;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -21,8 +22,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static java.lang.Integer.parseInt;
 
 
 @WebServlet("/admin/creation")

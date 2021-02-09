@@ -7,12 +7,13 @@ import java.util.Date;
 @Table(name = "Log")
 public class Log {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
     private String email;
 
+    @Temporal(TemporalType.DATE)
     private Date timestamp;
 
     public Log() {

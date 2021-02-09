@@ -23,7 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/login")
 public class GoToLoginPage extends HttpServlet {
 
-    private TemplateEngine templateEngine;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private TemplateEngine templateEngine;
     @EJB(name = "UserService")
     UserService userService;
 
@@ -40,7 +44,7 @@ public class GoToLoginPage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        templateEngine.process("/WEB-INF/views/login", ctx, response.getWriter());
+        templateEngine.process("WEB-INF/views/login", ctx, response.getWriter());
         response.setContentType("text/plain");
     }
 
@@ -67,7 +71,7 @@ public class GoToLoginPage extends HttpServlet {
         try {
             User user = userService.login(email, pwd);
             request.getSession().setAttribute("user", user);
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

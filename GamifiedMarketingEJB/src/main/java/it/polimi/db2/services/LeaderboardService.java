@@ -5,17 +5,14 @@ import it.polimi.db2.exceptions.NoPointsException;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
 @Stateless
 public class LeaderboardService {
 
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("GamifiedMarketing");
-
-    private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+	@PersistenceContext(unitName = "GamifiedMarketingEJB")
+	public EntityManager em;
 
     public LeaderboardService() {
     }
@@ -43,11 +40,7 @@ public class LeaderboardService {
     }
 
     public void cancelQuestionnaire(String userEmail) {
-        EntityTransaction transaction = em.getTransaction();
         Points points = new Points();
-
-        transaction.begin();
-
         points.setUserEmail(userEmail);
         points.setQuestionnaireDate(new Date());
         points.setVal(0);
@@ -55,7 +48,6 @@ public class LeaderboardService {
         em.persist(points);
         em.flush();
 
-        transaction.commit();
     }
 
     public static void main(String[] args) throws NoPointsException {

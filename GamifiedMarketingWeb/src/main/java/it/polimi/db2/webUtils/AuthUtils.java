@@ -1,4 +1,4 @@
-package it.polimi.db2.utils;
+package it.polimi.db2.webUtils;
 
 import it.polimi.db2.entities.User;
 
@@ -12,7 +12,7 @@ public class AuthUtils {
     public static boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/GamifiedMarketingWeb/");
             return false;
         }
 
@@ -22,7 +22,7 @@ public class AuthUtils {
     public static boolean checkAdminPrivilegies(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null || !((User) session.getAttribute("user")).getIsAdmin()) {
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
             return false;
         }
 
@@ -32,7 +32,7 @@ public class AuthUtils {
     public static boolean checkUserBan(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         if (session.isNew() || session.getAttribute("user") == null || ((User) session.getAttribute("user")).getIsBanned()) {
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
             return true;
         }
 

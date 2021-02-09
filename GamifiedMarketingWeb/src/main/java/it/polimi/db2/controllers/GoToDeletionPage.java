@@ -2,7 +2,8 @@ package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.PDay;
 import it.polimi.db2.services.PDayService;
-import it.polimi.db2.utils.AuthUtils;
+import it.polimi.db2.webUtils.AuthUtils;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -53,7 +54,7 @@ public class GoToDeletionPage extends HttpServlet {
         pDayList = pDayService
                 .getAllPDays()
                 .stream()
-                .filter(pDay -> pDay.getDate().before(new Date()) || pDay.getDate().equals(new Date()))
+                .filter(pDay -> pDay.getDate().before(new Date()))
                 .collect(Collectors.toList());
 
         dateList = pDayList
@@ -90,7 +91,11 @@ public class GoToDeletionPage extends HttpServlet {
             return;
         }
 
-        pDayList = pDayService.getAllPDays();
+        pDayList = pDayService
+                .getAllPDays()
+                .stream()
+                .filter(pDay -> pDay.getDate().before(new Date()))
+                .collect(Collectors.toList());
 
         dateList = pDayList
                 .stream()

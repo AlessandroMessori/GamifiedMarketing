@@ -1,10 +1,11 @@
 package it.polimi.db2.controllers;
 
-import it.polimi.db2.utils.AuthUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
+import it.polimi.db2.webUtils.AuthUtils;
 
 import java.io.IOException;
 

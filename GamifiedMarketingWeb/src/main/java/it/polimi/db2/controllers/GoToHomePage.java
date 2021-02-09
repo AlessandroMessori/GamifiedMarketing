@@ -7,7 +7,8 @@ import it.polimi.db2.entities.User;
 import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.ReviewService;
-import it.polimi.db2.utils.AuthUtils;
+import it.polimi.db2.webUtils.AuthUtils;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;

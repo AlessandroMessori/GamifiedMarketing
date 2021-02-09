@@ -9,7 +9,8 @@ import it.polimi.db2.services.AnswerService;
 import it.polimi.db2.services.LeaderboardService;
 import it.polimi.db2.services.PDayService;
 import it.polimi.db2.services.QuestionService;
-import it.polimi.db2.utils.AuthUtils;
+import it.polimi.db2.webUtils.AuthUtils;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -76,7 +77,7 @@ public class GoToMarketingPage extends HttpServlet {
             pDayService.getTodayProduct();
         } catch (NoPDayException e) {
             e.printStackTrace();
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
             return;
         }
 
@@ -114,7 +115,7 @@ public class GoToMarketingPage extends HttpServlet {
 
         if (act.equals("Cancel")) {
             leaderboardService.cancelQuestionnaire(user.getEmail());
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
         } else if (act.equals("Submit")) {
             // obtain and escape params
             for (String key : request.getParameterMap().keySet()) {
@@ -129,9 +130,11 @@ public class GoToMarketingPage extends HttpServlet {
             try {
                 answerService.saveUserAnswers(user.getEmail(), idsList, answerList);
                 ctx.setVariable("message", "Questions saved successfully!");
-                response.sendRedirect("/greetings");
+                response.sendRedirect("/GamifiedMarketingWeb/greetings");
             } catch (BannedWordException e) {
-                response.sendRedirect("/pday");
+            	User currentUser = (User) request.getSession().getAttribute("user");
+            	currentUser.setIsBanned(true);
+                response.sendRedirect("/GamifiedMarketingWeb/pday");
             } catch (Exception e) {
                 e.printStackTrace();
                 ctx.setVariable("message", "There was an error in saving the marketing questions");

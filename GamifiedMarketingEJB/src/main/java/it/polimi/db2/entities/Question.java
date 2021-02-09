@@ -12,7 +12,7 @@ import java.util.List;
 @NamedQuery(name = "Question.deleteQuestions", query = "DELETE FROM Question q WHERE q.day = ?1")
 public class Question {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
@@ -22,10 +22,16 @@ public class Question {
 
     private boolean isMarketing;
 
+    @Temporal(TemporalType.DATE)
     private Date day;
 
-    @OneToMany(mappedBy = "questionId",cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "question")
     private List<Answer> answers;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "day",insertable = false,updatable = false)
+    private PDay pday;
+    
 
     public Question() {
 

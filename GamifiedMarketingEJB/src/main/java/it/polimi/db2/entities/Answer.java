@@ -15,8 +15,13 @@ public class Answer {
     private int questionId;
 
     private String text;
+    
+     @ManyToOne(fetch  = FetchType.LAZY)
+     @JoinColumn(name="userEmail",insertable = false,updatable = false)
+     private User user;
+     
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "questionId", insertable = false, updatable = false)
     private Question question;
 

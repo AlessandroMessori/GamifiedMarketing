@@ -15,6 +15,7 @@ public class Points {
     private String userEmail;
 
     @Id
+    @Temporal(TemporalType.DATE)
     private Date questionnaireDate;
 
     private int val;

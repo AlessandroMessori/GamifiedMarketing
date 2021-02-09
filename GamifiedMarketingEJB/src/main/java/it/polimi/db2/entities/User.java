@@ -1,9 +1,5 @@
 package it.polimi.db2.entities;
 
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.*;
@@ -19,7 +15,6 @@ import java.util.List;
 @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
 @NamedQuery(name = "User.checkCredentials", query = "SELECT u from User u WHERE u.email =?1 AND u.password = ?2")
 @NamedQuery(name = "User.checkUnique", query = "SELECT u from User u WHERE u.email = ?1 OR u.username = ?2")
-@FilterDef(name = "answerFilter", parameters = {@ParamDef(name = "day", type = "date")})
 public class User {
 
     @Id
@@ -33,8 +28,7 @@ public class User {
 
     private boolean isBanned;
 
-    @OneToMany(mappedBy = "userEmail")
-    @Filter(name = "answerFilter", condition = " day= :day")
+    @OneToMany(mappedBy = "user")
     private List<Answer> answers;
 
     public User() {
@@ -69,13 +63,8 @@ public class User {
         this.username = username;
     }
 
-    public void setPassword(String password) /*throws NoSuchAlgorithmException, InvalidKeySpecException*/ {
-        /*SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        this.password = Arrays.toString(factory.generateSecret(spec).getEncoded());*/
+    public void setPassword(String password)  {
+      
         this.password = password;
     }
 

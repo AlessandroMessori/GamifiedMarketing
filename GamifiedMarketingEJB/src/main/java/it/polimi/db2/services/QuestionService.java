@@ -14,10 +14,8 @@ import java.util.ListIterator;
 @Stateless
 public class QuestionService {
 
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("GamifiedMarketing");
-
-    private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+	@PersistenceContext(unitName = "GamifiedMarketingEJB")
+	public EntityManager em;
 
     @EJB(name = "PDayService")
     PDayService pDayService;

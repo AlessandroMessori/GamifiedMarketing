@@ -8,17 +8,18 @@ import java.util.List;
 @Entity
 @Table(name = "PDay", schema = "GamifiedMarketing")
 @NamedQuery(name = "PDay.getTodayProduct", query = "SELECT p FROM PDay p WHERE p.day= ?1")
-@NamedQuery(name = "PDay.getAllProducts", query = "SELECT p FROM PDay p ORDER BY p.day")
+@NamedQuery(name = "PDay.getAllProducts", query = "SELECT p FROM PDay p WHERE p.day < ?1 ORDER BY p.day")
 public class PDay {
 
     @Id
+    @Temporal(TemporalType.DATE)
     private Date day;
 
     @ManyToOne
     @JoinColumn(name = "productId")
     private Product product;
 
-    @OneToMany(mappedBy = "day")
+    @OneToMany(mappedBy = "pday")
     private List<Question> questions = new ArrayList<>();
 
     public PDay() {

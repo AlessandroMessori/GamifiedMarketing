@@ -5,7 +5,8 @@ import it.polimi.db2.exceptions.NoPDayException;
 import it.polimi.db2.exceptions.NoPointsException;
 import it.polimi.db2.services.LeaderboardService;
 import it.polimi.db2.services.PDayService;
-import it.polimi.db2.utils.AuthUtils;
+import it.polimi.db2.webUtils.AuthUtils;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -60,7 +61,7 @@ public class GoToLeaderboardPage extends HttpServlet {
             pDayService.getTodayProduct();
         } catch (NoPDayException e) {
             e.printStackTrace();
-            response.sendRedirect("/pday");
+            response.sendRedirect("/GamifiedMarketingWeb/pday");
             return;
         }
 

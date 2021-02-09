@@ -6,15 +6,15 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+
 import java.util.List;
 
 @Stateless
 public class ReviewService {
 
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("GamifiedMarketing");
-
-    private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+	@PersistenceContext(unitName = "GamifiedMarketingEJB")
+	public EntityManager em;
 
     public ReviewService() {
 

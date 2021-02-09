@@ -1,8 +1,9 @@
 package it.polimi.db2.controllers;
 
 import it.polimi.db2.entities.Answer;
+import it.polimi.db2.pairs.AnswersPoints;
 import it.polimi.db2.services.AnswerService;
-import org.apache.commons.lang3.tuple.Pair;
+
 import org.apache.commons.text.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -32,7 +33,8 @@ public class GoToInspectionPage extends HttpServlet {
 
     @EJB(name = "AnswerService")
     AnswerService answerService;
-    Map<String, Pair<List<Answer>, Integer>> allAnswers, completedAnswers;
+    
+    Map<String, AnswersPoints> allAnswers, completedAnswers;
     List<String> deletedUsers;
 
     public void init() throws ServletException {
@@ -72,7 +74,7 @@ public class GoToInspectionPage extends HttpServlet {
             completedAnswers = allAnswers
                     .entrySet()
                     .stream()
-                    .filter(item -> item.getValue().getRight() > 0)
+                    .filter(item -> item.getValue().getPoints() > 0)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             ctx.setVariable("answers", completedAnswers);
@@ -88,8 +90,8 @@ public class GoToInspectionPage extends HttpServlet {
 
     List<String> getDeletedUsers() {
         List<String> deletedUsers = new ArrayList<>();
-        for (HashMap.Entry<String, Pair<List<Answer>, Integer>> entry : allAnswers.entrySet()) {
-            if (entry.getValue().getRight() == 0) {
+        for (HashMap.Entry<String, AnswersPoints> entry : allAnswers.entrySet()) {
+            if (entry.getValue().getPoints() == 0) {
                 deletedUsers.add(entry.getKey());
             }
         }

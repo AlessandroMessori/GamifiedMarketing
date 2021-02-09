@@ -9,7 +9,6 @@ import it.polimi.db2.exceptions.NoPDayException;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.*;
-import javax.transaction.Transaction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,10 +17,8 @@ import java.util.List;
 
 @Stateless
 public class PDayService {
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("GamifiedMarketing");
-
-    private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+	@PersistenceContext(unitName = "GamifiedMarketingEJB")
+	public EntityManager em;
 
     @EJB(name = "ProductService")
     ProductService productService;
@@ -48,10 +45,6 @@ public class PDayService {
         Product product;
         List<Question> questions = new ArrayList<>();
 
-        EntityTransaction transaction = em.getTransaction();
-
-        transaction.begin();
-
         product = productService.findProductByName(productName);
 
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -72,20 +65,15 @@ public class PDayService {
             em.persist(question);
         }
 
-        transaction.commit();
-
     }
 
     public List<PDay> getAllPDays() {
         return em.createNamedQuery("PDay.getAllProducts", PDay.class)
+        		.setParameter(1, new Date(), TemporalType.DATE)
                 .getResultList();
     }
 
     public void deletePDayData(Date day) {
-
-        EntityTransaction transaction = em.getTransaction();
-
-        transaction.begin();
 
         em.createNamedQuery("Question.deleteQuestions")
                 .setParameter(1, day, TemporalType.DATE)
@@ -94,9 +82,6 @@ public class PDayService {
         em.createNamedQuery("Points.deleteLeaderboard")
                 .setParameter(1, day, TemporalType.DATE)
                 .executeUpdate();
-
-        transaction.commit();
-
     }
 
     public static void main(String[] args) {

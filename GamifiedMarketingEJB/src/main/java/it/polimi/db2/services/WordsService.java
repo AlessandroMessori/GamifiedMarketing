@@ -8,11 +8,9 @@ import java.util.*;
 
 @Stateless
 public class WordsService {
-
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("GamifiedMarketing");
-
-    private static final EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+	
+	@PersistenceContext(unitName = "GamifiedMarketingEJB")
+	public EntityManager em;
 
     public WordsService() {
     }
